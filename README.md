@@ -71,28 +71,6 @@ _____
 > }
 > ```
 
-  - GET api/v1/users/{name} - get one user by username
-    - Server should answer with status code 200 and record with name === username if it exists
-    - Server should answer with status code 400 and corresponding message if username is invalid (not uuid)
-    - Server should answer with status code 404 and corresponding message if record with name === username doesn't exist
-
-> Request
-> ```
-> curl -X 'GET' \
-> ‘api/v1/users/username’ \
-> ```
-
-> Response body
-> ```
-> {
->   "id": 0,
->   "name": "username",
->   "password": "string",
->   "email": "string",
->   "isAdmin": false,
-> }
-> ```
-
   - POST api/v1/users - create record about new user and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
     - Server should answer with status code 201 and newly created record
     - Server should answer with status code 400 and corresponding message if request body does not contain required fields
