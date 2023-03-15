@@ -1,13 +1,28 @@
-### Description
+# API documentation
+## Content
+1. [Description](#descr)
+2. [Technical requirements](#tech)
+3. [Implementation details](#impl)
+   * [Endpoint api/v1/users](#users)
+   * [Endpoint api/v1/products](#prod)
+   * [Endpoint api/v1/orders](#orders)
+   * [Endpoint api/v1/carts](#carts)
+4. [Objects](#obj)
+5. [Install](#inst)
+6. [Run](#run)
+
+______
+
+## Description <a name="descr"></a>
 This project is a clothing shop. There are two roles of users: admin and customers. Customers can choose clothes by size. This application has the ability to add, update, delete and get information about the user, product, cart and order.
 _____
-### Technical requirements
+## Technical requirements <a name="tech"></a>
 - Task will be implemented on Javascript
 - Database - MongoDB
 - Docker
 _____
-### Implementation details
-- #### Endpoint api/v1/users:
+## Implementation details <a name="imple"></a>
+- ### Endpoint api/v1/users: <a name="users"></a>
   - GET api/v1/users - get all users
       - Server should answer with status code 200 and all users records.
 
@@ -151,7 +166,7 @@ _____
 > No Content
 > ```
 
-- #### Endpoint api/v1/products:
+- ### Endpoint api/v1/products: <a name="prod"></a>
   - GET api/v1/products - get all products
     - Server should answer with status code 200 and all products records
 
@@ -294,7 +309,7 @@ _____
 > No Content
 > ```    
 
-- #### Endpoint api/orders:
+- ### Endpoint api/orders: <a name="orders"></a>
   - GET api/v1/orders - get all orders
     - Server should answer with status code 200 and all orders records
 
@@ -410,7 +425,7 @@ _____
 > No Content
 > ```   
 
-- #### Endpoint api/carts:
+- ### Endpoint api/carts: <a name="carts"></a>
   - GET api/v1/carts - get all carts
     - Server should answer with status code 200 and all carts records
 
@@ -520,7 +535,8 @@ _____
 > ```   
 
 - Requests to non-existing endpoints are handled (server answer with status code 404 and message with error)
-______
+______  
+<a name="obj"></a>
 Users are stored as objects that have the following properties:
   - id — unique identifier (string, uuid) generated on server side
   - name — user's name (string, required)
@@ -555,7 +571,7 @@ Carts are stored as objects that have the following properties:
 - products — products that are in cart (array of strings or empty array, required)
 ______
 
-### Install
+### Install <a name="inst"></a>
 Clone this repo with command
 ```sh
 git clone https://github.com/suprugafad/shop_solvd.git
@@ -571,7 +587,7 @@ Install dependencies
 npm install
 ```
 
-### Run in docker container
+### Run in docker container <a name="run"></a>
 For running application in Docker container you should have docker installed on your system
 
 Run app
@@ -584,8 +600,9 @@ Stop app
 docker compose down
 ```
 
-### Run as is
+### Run as is 
 Run command
 ```sh
 node index.js
 ```
+
