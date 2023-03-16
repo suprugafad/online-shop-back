@@ -14,10 +14,10 @@
 ______
 
 ## Description <a name="descr"></a>
-This project is a clothing shop. There are two roles of users: admin and customers. Customers can choose clothes by size. This application has the ability to add, update, delete and get information about the user, product, cart and order.
+This project is a clothing shop. There are two roles of users: admin and customer. This application has the ability to add, update, delete and get information about users, products, carts and orders.
 _____
 ## Technical requirements <a name="tech"></a>
-- Task will be implemented on Javascript
+- Programming language - Javascript
 - Database - MongoDB
 - Docker
 _____
@@ -100,7 +100,7 @@ _____
 > ```
 
   - PUT api/v1/users/{userId} - update existing user. The request body should contain the updated information for the product.
-    - Server should answer with status code 200 and updated record
+    - Server should answer with status code 200 and update the record
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
 
@@ -128,8 +128,8 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/users/{userId} is used to delete existing user from database
-    - Server should answer with status code 204 if the record is found and deleted
+  - DELETE api/v1/users/{userId} - delete existing user from database
+    - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
 
@@ -237,7 +237,7 @@ _____
 > ```
 
   - PUT api/v1/products/{productId} - update existing product. The request body should contain the updated information for the product.
-    - Server should answer with status code 200 and updated record
+    - Server should answer with status code 200 and update the record
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
 
@@ -271,8 +271,8 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/products/{productId} is used to delete existing product from database
-    - Server should answer with status code 204 if the record is found and deleted
+  - DELETE api/v1/products/{productId} - delete existing product from database
+    - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
 
@@ -361,7 +361,7 @@ _____
 > ```
 
   - PUT api/v1/orders/{orderId} - update existing order. The request body should contain the updated information for the order.
-    - Server should answer with status code 200 and updated record
+    - Server should answer with status code 200 and update record
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
 
@@ -387,8 +387,8 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/orders/{orderId} is used to delete existing order from database
-    - Server should answer with status code 204 if the record is found and deleted
+  - DELETE api/v1/orders/{orderId} - delete existing order from database
+    - Server should answer with status code 204 if the record was found and delete record
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
 
@@ -472,7 +472,7 @@ _____
 > ```
 
 - PUT api/v1/carts/{cartsId} - update existing cart. The request body should contain the updated information for the cart.
-  - Server should answer with status code 200 and updated record
+  - Server should answer with status code 200 and update the record
   - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
   - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
 
@@ -496,8 +496,8 @@ _____
 > }
 > ```
 
-- DELETE api/v1/carts/{cartId} is used to delete existing cart from database
-  - Server should answer with status code 204 if the record is found and deleted
+- DELETE api/v1/carts/{cartId} - delete existing cart from database
+  - Server should answer with status code 204 if the record was found and delete the record
   - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
   - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
 
@@ -520,32 +520,32 @@ Users are stored as objects that have the following properties:
   - name — user's name (string, required)
   - password — user's age (number, required)
   - email — user’s email address (string, unique, required)
-  - isAdmin — shows user is admin or not (boolean, required)
+  - isAdmin — if user is admin - true, if user is customer - false (boolean, required)
 
 Products are stored as objects that have the following properties:
   - id — unique identifier (string, uuid) generated on server side
   - title — product's title (string, required)
   - description — product's description (string, required)
   - category — product's category (string, required)
-  - brand — brand of product (string, required)
-  - price — price of product (number, required)
-  - image — image of product (string, required)
+  - brand — product's brand (string, required)
+  - price — product's price (number, required)
+  - image — product's image (string, required)
   - modelId — product’s model (string, uuid)
 
 Models are stored as objects that have the following properties:
   - id — unique identifier (string, uuid) generated on server side
   - size — model's size (string, required)
-  - count — count of items of this model (number, required)
+  - count — count of items (number, required)
 
 Orders are stored as objects that have the following properties:
   - id — unique identifier (string, uuid) generated on server side
-  - userId — id of the user (string, uuid)
-  - products — products that are in cart (array of strings or empty array, required)
-  - date — date when order was created (date, required)
+  - userId — user's id (string, uuid)
+  - products — list of products (array of strings or empty array, required)
+  - date — list of products (date, required)
 
 Carts are stored as objects that have the following properties:
 - id — unique identifier (string, uuid) generated on server side
-- userId — id of the user (string, uuid)
+- userId — user's id (string, uuid)
 - products — products that are in cart (array of strings or empty array, required)
 ______
 
