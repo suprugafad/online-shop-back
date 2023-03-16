@@ -59,6 +59,10 @@ _____
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
 
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `userId`  | string | yes      | user's ID   |
+
 > Request
 > ```
 > curl -X 'GET' \
@@ -139,6 +143,10 @@ _____
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
 
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `userId`  | string | yes      | user's ID   |
+
 > Request
 > ```
 > curl -X 'PUT' \
@@ -167,6 +175,10 @@ _____
     - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `userId`  | string | yes      | user's ID   |
 
 > Request
 > ```
@@ -216,6 +228,10 @@ _____
     - Server should answer with status code 200 and record with id === productId if it exists
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
+
+| Parameter   | Type   | Required | Description  |
+|-------------|--------|----------|--------------|
+| `productId` | string | yes      | product's ID |
 
 > Request
 > ```
@@ -312,6 +328,10 @@ _____
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
 
+| Parameter   | Type   | Required | Description  |
+|-------------|--------|----------|--------------|
+| `productId` | string | yes      | product's ID |
+
 > Request
 > ```
 > curl -X 'PUT' \
@@ -346,6 +366,10 @@ _____
     - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
+
+| Parameter   | Type   | Required | Description  |
+|-------------|--------|----------|--------------|
+| `productId` | string | yes      | product's ID |
 
 > Request
 > ```
@@ -391,6 +415,10 @@ _____
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
 
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `orderId` | string | yes      | order's ID  |
+
 > Request
 > ```
 > curl -X 'GET' \
@@ -408,7 +436,7 @@ _____
 > }
 > ```
 
-- GET api/v1/orders?start_date=:start_date&end_date=:end_date - get a list of orders between the specified start and end dates.
+  - GET api/v1/orders?start_date=:start_date&end_date=:end_date - get a list of orders between the specified start and end dates.
 
 | Parameter      | Type   | Required    | Description                                                              |
 |----------------|--------|-------------|--------------------------------------------------------------------------|
@@ -440,7 +468,7 @@ _____
 >   } ] 
 > ```
 
-- GET api/v1/orders?start_date=:start_date&end_date=:end_date&status=:status - get a list of orders between the specified start and end dates, and with the specified status.
+  - GET api/v1/orders?start_date=:start_date&end_date=:end_date&status=:status - get a list of orders between the specified start and end dates, and with the specified status.
 
 | Parameter    | Type   | Required | Description                                                             |
 |--------------|--------|----------|-------------------------------------------------------------------------|
@@ -499,6 +527,10 @@ _____
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
 
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `orderId` | string | yes      | order's ID  |
+
 > Request
 > ```
 > curl -X 'PUT' \
@@ -527,6 +559,10 @@ _____
     - Server should answer with status code 204 if the record was found and delete record
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `orderId` | string | yes      | order's ID  |
 
 > Request
 > ```
@@ -567,6 +603,10 @@ _____
   - Server should answer with status code 200 and record with id === cartId if it exists
   - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
   - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `cartId`  | string | yes      | cart's ID   |
 
 > Request
 > ```
@@ -612,6 +652,10 @@ _____
   - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
   - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
 
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `cartId`  | string | yes      | cart's ID   |
+
 > Request
 > ```
 > curl -X 'PUT' \
@@ -636,6 +680,10 @@ _____
   - Server should answer with status code 204 if the record was found and delete the record
   - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
   - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
+
+| Parameter | Type   | Required | Description |
+|-----------|--------|----------|-------------|
+| `cartId`  | string | yes      | cart's ID   |
 
 > Request
 > ```
