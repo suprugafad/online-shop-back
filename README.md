@@ -2,14 +2,15 @@
 ## Content
 1. [Description](#descr)
 2. [Technical requirements](#tech)
-3. [Implementation details](#impl)
+3. [Base URL](#url)
+4. [Implementation details](#impl)
    * [Endpoint api/v1/users](#users)
    * [Endpoint api/v1/products](#prod)
    * [Endpoint api/v1/orders](#orders)
    * [Endpoint api/v1/carts](#carts)
-4. [Objects](#obj)
-5. [Install](#inst)
-6. [Run](#run)
+5. [Objects](#obj)
+6. [Install](#inst)
+7. [Run](#run)
 
 ______
 
@@ -21,6 +22,10 @@ _____
 - Database - MongoDB
 - Docker
 _____
+## Base URL <a name="url"></a>
+`http://localhost:3000`
+_____
+
 ## Implementation details <a name="imple"></a>
 - ### Endpoint api/v1/users: <a name="users"></a>
   - GET api/v1/users - get all users
@@ -69,6 +74,36 @@ _____
 >   "email": "string",
 >   "isAdmin": false,
 > }
+> ```
+
+  - GET api/v1/users?name=:name - get a list of users whose name partially matches the specified parameter.
+
+| Parameter | Type   | Required | Description                                 |
+|-----------|--------|----------|---------------------------------------------|
+| `name`    | string | Yes      | Part of the name of the user to search for. |
+
+> Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/users?name=jo
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "name": "John",
+>     "password": "string",
+>     "email": "john@example.com",
+>     "isAdmin": false,
+>   },
+>   {
+>     "id": 3,
+>     "name": "Joseph",
+>     "password": "string",
+>     "email": "joseph@example.com",
+>     "isAdmin": false,
+>   } ] 
 > ```
 
   - POST api/v1/users - create record about new user and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
@@ -202,6 +237,42 @@ _____
 > }
 > ```
 
+- GET api/v1/products?category=:category - get a list of products which title partially matches the specified parameter.
+
+| Parameter  | Type    | Required | Description                                        |
+|------------|---------|----------|----------------------------------------------------|
+| `category` | string  | Yes      | Part of the category of the product to search for. |
+
+> Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/products?title=co
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "title": "coat",
+>     "discription": "string",
+>     "category": "string",
+>     "brand": "string",
+>     "price": 1,
+>     "image": "string",
+>     "modelId": 1,
+>   },
+>   {
+>     "id": 6,
+>     "title": "corset",
+>     "discription": "string",
+>     "category": "string",
+>     "brand": "string",
+>     "price": 1,
+>     "image": "string",
+>     "modelId": 1,
+>   } ] 
+> ```
+
   - POST api/v1/products - create record about new product and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
     - Server should answer with status code 201 and newly created record
     - Server should answer with status code 400 and corresponding message if request body does not contain required fields
@@ -303,12 +374,14 @@ _____
 >   "id": 1,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > },
 > {
 >   "id": 2,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending"
 >   "date": "2023-02-16T00:00:00+0400",
 > }]
 > ```
@@ -330,8 +403,67 @@ _____
 >   "id": 1,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }
+> ```
+
+- GET api/v1/orders?start_date=:start_date&end_date=:end_date - get a list of orders between the specified start and end dates.
+
+| Parameter      | Type   | Required    | Description                                                              |
+|----------------|--------|-------------|--------------------------------------------------------------------------|
+| `start_date`   | date   | Yes         | The start date of the period to search for. Format should be YYYY-MM-DD  |
+| `end_date`     | date   | Yes         | The end date of the period to search for. Format should be YYYY-MM-DD    |
+
+
+> Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/orders?start_date="2023-02-10"&end_date="2023-02-15"
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "userId": "string",
+>     "products": "string",
+>     "status": "pending"
+>     "date": "2023-02-11",
+>   },
+>   {
+>     "id": 8,
+>     "userId": "string",
+>     "products": "string",
+>     "status": "shipped"
+>     "date": "2023-02-13",
+>   } ] 
+> ```
+
+- GET api/v1/orders?start_date=:start_date&end_date=:end_date&status=:status - get a list of orders between the specified start and end dates, and with the specified status.
+
+| Parameter    | Type   | Required | Description                                                             |
+|--------------|--------|----------|-------------------------------------------------------------------------|
+| `start_date` | date   | Yes      | The start date of the period to search for. Format should be YYYY-MM-DD |
+| `end_date`   | date   | Yes      | The end date of the period to search for. Format should be YYYY-MM-DD   |
+| `status`     | string | Yes      | The status of the orders to search for                                  |
+
+
+> Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/orders?start_date="2023-02-10"&end_date="2023-02-15&status=pending"
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "userId": "string",
+>     "products": "string",
+>     "date": "2023-02-11",
+>     "status": "pending"
+>   } ] 
 > ```
 
   - POST api/v1/orders - create record about new order and put it in database. The request body should contain the required information for creating a new order.
@@ -346,6 +478,7 @@ _____
 >   "id": 1,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }'
 > ```
@@ -356,6 +489,7 @@ _____
 >   "id": 1,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending",
 >   "date": "2023-02-15T00:00:00+0400",
 > }
 > ```
@@ -373,6 +507,7 @@ _____
 >   "id": 1,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }'
 > ```
@@ -383,6 +518,7 @@ _____
 >   "id": 1,
 >   "userId": "string",
 >   "products": "string",
+>   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }
 > ```
@@ -541,6 +677,7 @@ Orders are stored as objects that have the following properties:
   - id — unique identifier (string, uuid) generated on server side
   - userId — user's id (string, uuid)
   - products — list of products (array of strings or empty array, required)
+  - status - product's status (string, required)
   - date — list of products (date, required)
 
 Carts are stored as objects that have the following properties:
