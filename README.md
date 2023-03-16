@@ -3,11 +3,11 @@
 1. [Description](#descr)
 2. [Technical requirements](#tech)
 3. [Base URL](#url)
-4. [Implementation details](#impl)
-   * [Endpoint api/v1/users](#users)
-   * [Endpoint api/v1/products](#prod)
-   * [Endpoint api/v1/orders](#orders)
-   * [Endpoint api/v1/carts](#carts)
+4. [Implementation details](#impl) <br>
+   4.1 [Endpoint api/v1/users](#users) <br>
+   4.2 [Endpoint api/v1/products](#prod) <br>
+   4.3 [Endpoint api/v1/orders](#orders) <br>
+   4.4 [Endpoint api/v1/carts](#carts)
 5. [Objects](#obj)
 6. [Install](#inst)
 7. [Run](#run)
@@ -27,7 +27,7 @@ _____
 _____
 
 ## Implementation details <a name="imple"></a>
-- ### Endpoint api/v1/users: <a name="users"></a>
+### 1.  Endpoint api/v1/users: <a name="users"></a>
   - GET api/v1/users - get all users
       - Server should answer with status code 200 and all users records.
 
@@ -191,7 +191,7 @@ _____
 > No Content
 > ```
 
-- ### Endpoint api/v1/products: <a name="prod"></a>
+### 2. Endpoint api/v1/products: <a name="prod"></a>
   - GET api/v1/products - get all products
     - Server should answer with status code 200 and all products records
 
@@ -253,7 +253,7 @@ _____
 > }
 > ```
 
-- GET api/v1/products?category=:category - get a list of products which title partially matches the specified parameter.
+  - GET api/v1/products?category=:category - get a list of products which title partially matches the specified parameter.
 
 | Parameter  | Type    | Required | Description                                        |
 |------------|---------|----------|----------------------------------------------------|
@@ -382,7 +382,7 @@ _____
 > No Content
 > ```    
 
-- ### Endpoint api/orders: <a name="orders"></a>
+### 3. Endpoint api/orders: <a name="orders"></a>
   - GET api/v1/orders - get all orders
     - Server should answer with status code 200 and all orders records
 
@@ -575,7 +575,7 @@ _____
 > No Content
 > ```   
 
-- ### Endpoint api/carts: <a name="carts"></a>
+### 4. Endpoint api/carts: <a name="carts"></a>
   - GET api/v1/carts - get all carts
     - Server should answer with status code 200 and all carts records
 
@@ -647,10 +647,10 @@ _____
 > }
 > ```
 
-- PUT api/v1/carts/{cartsId} - update existing cart. The request body should contain the updated information for the cart.
-  - Server should answer with status code 200 and update the record
-  - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
-  - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
+  - PUT api/v1/carts/{cartsId} - update existing cart. The request body should contain the updated information for the cart.
+    - Server should answer with status code 200 and update the record
+    - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
+    - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
 
 | Parameter | Type   | Required | Description |
 |-----------|--------|----------|-------------|
@@ -676,10 +676,10 @@ _____
 > }
 > ```
 
-- DELETE api/v1/carts/{cartId} - delete existing cart from database
-  - Server should answer with status code 204 if the record was found and delete the record
-  - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
-  - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
+  - DELETE api/v1/carts/{cartId} - delete existing cart from database
+    - Server should answer with status code 204 if the record was found and delete the record
+    - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
+    - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
 
 | Parameter | Type   | Required | Description |
 |-----------|--------|----------|-------------|
