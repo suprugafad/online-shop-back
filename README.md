@@ -30,7 +30,16 @@ _____
 ### 1.  Endpoint api/v1/users: <a name="users"></a>
   - GET api/v1/users - get all users
       - Server should answer with status code 200 and all users records.
+      - Possible parameters:
 
+| Parameter | Type    | Required | Description                                  |
+|-----------|---------|----------|----------------------------------------------|
+| `name`    | string  | Yes      | Part of the name of the user to search for.  |
+| `email`   | string  | Yes      | Part of the email of the user to search for. |
+| `isAdmin` | boolean | Yes      | If user is admin - true, else - false.       | 
+
+
+#### **Example 1:**
 > Request
 > ```
 > curl -X 'GET' \
@@ -54,6 +63,33 @@ _____
 >   "isAdmin": false,
 > }]
 > ```
+
+#### **Example 2:**
+> Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/users?name=jo
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "name": "John",
+>     "password": "string",
+>     "email": "john@example.com",
+>     "isAdmin": false,
+>   },
+>   {
+>     "id": 3,
+>     "name": "Joseph",
+>     "password": "string",
+>     "email": "joseph@example.com",
+>     "isAdmin": false,
+>   } ] 
+> ```
+
+
   - GET api/v1/users/{userId} - get one user by ID
     - Server should answer with status code 200 and record with id === userId if it exists
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
@@ -78,40 +114,6 @@ _____
 >   "email": "string",
 >   "isAdmin": false,
 > }
-> ```
-
-  - GET api/v1/users?name=:name - get a list of users whose name partially matches the specified parameter.
-    - Server should answer with status code 200 and array of records with name === name if it exists
-    - Server should answer with status code 400 and corresponding message if name is invalid (not uuid)
-    - Server should answer with status code 404 and corresponding message if record with name === name doesn't exist
-
-
-| Parameter | Type   | Required | Description                                 |
-|-----------|--------|----------|---------------------------------------------|
-| `name`    | string | Yes      | Part of the name of the user to search for. |
-
-> Request:
-> ```
-> curl -X 'GET' \
-> 'api/v1/users?name=jo
-> ```
-
-> Response body
-> ```
-> [ {
->     "id": 1,
->     "name": "John",
->     "password": "string",
->     "email": "john@example.com",
->     "isAdmin": false,
->   },
->   {
->     "id": 3,
->     "name": "Joseph",
->     "password": "string",
->     "email": "joseph@example.com",
->     "isAdmin": false,
->   } ] 
 > ```
 
   - POST api/v1/users - create record about new user and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
@@ -198,6 +200,15 @@ _____
 ### 2. Endpoint api/v1/products: <a name="prod"></a>
   - GET api/v1/products - get all products
     - Server should answer with status code 200 and all products records
+    - Possible query parameters:
+
+| Parameter  | Type   | Required | Description                                        |
+|------------|--------|----------|----------------------------------------------------|
+| `category` | string | Yes      | Part of the category of the product to search for. |
+| `minPrice` | number | Yes      | Minimal price of the product.                      |
+| `maxPrice` | number | Yes      | Maximum price of the product.                      |
+| `brand`    | string | Yes      | Part of the brand of the product to search for.    |
+| `title`    | string | Yes      | Part of the title of the product to search for.    |
 
 > Request
 > ```
@@ -392,7 +403,15 @@ _____
 ### 3. Endpoint api/orders: <a name="orders"></a>
   - GET api/v1/orders - get all orders
     - Server should answer with status code 200 and all orders records
+    - Possible query parameters:
 
+| Parameter    | Type   | Required | Description                                                             |
+|--------------|--------|----------|-------------------------------------------------------------------------|
+| `start_date` | date   | Yes      | The start date of the period to search for. Format should be YYYY-MM-DD |
+| `end_date`   | date   | Yes      | The end date of the period to search for. Format should be YYYY-MM-DD   |
+| `status`     | string | Yes      | The status of the orders to search for                                  |
+
+#### **Example 1:**
 > Request
 > ```
 > curl -X 'GET' \
@@ -415,6 +434,48 @@ _____
 >   "status": "pending"
 >   "date": "2023-02-16T00:00:00+0400",
 > }]
+> ```
+#### **Example 2:**
+> > Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/orders?start_date="2023-02-10"&end_date="2023-02-15"
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "userId": "string",
+>     "products": "string",
+>     "status": "pending"
+>     "date": "2023-02-11",
+>   },
+>   {
+>     "id": 8,
+>     "userId": "string",
+>     "products": "string",
+>     "status": "shipped"
+>     "date": "2023-02-13",
+>   } ] 
+> ```
+
+#### **Example 3:**
+> Request:
+> ```
+> curl -X 'GET' \
+> 'api/v1/orders?start_date="2023-02-10"&end_date="2023-02-15&status=pending"
+> ```
+
+> Response body
+> ```
+> [ {
+>     "id": 1,
+>     "userId": "string",
+>     "products": ["string"],
+>     "date": "2023-02-11",
+>     "status": "pending"
+>   } ] 
 > ```
 
   - GET api/v1/orders/{orderId} - get one order
@@ -443,70 +504,6 @@ _____
 > }
 > ```
 
-  - GET api/v1/orders?start_date=:start_date&end_date=:end_date - get a list of orders between the specified start and end dates.
-    - Server should answer with status code 200 and array of records with start_date < date < end_date if it exists
-    - Server should answer with status code 400 and corresponding message if date is invalid (not uuid)
-    - Server should answer with status code 404 and corresponding message if record with start_date < date < end_date doesn't exist
-
-| Parameter      | Type   | Required    | Description                                                              |
-|----------------|--------|-------------|--------------------------------------------------------------------------|
-| `start_date`   | date   | Yes         | The start date of the period to search for. Format should be YYYY-MM-DD  |
-| `end_date`     | date   | Yes         | The end date of the period to search for. Format should be YYYY-MM-DD    |
-
-
-> Request:
-> ```
-> curl -X 'GET' \
-> 'api/v1/orders?start_date="2023-02-10"&end_date="2023-02-15"
-> ```
-
-> Response body
-> ```
-> [ {
->     "id": 1,
->     "userId": "string",
->     "products": "string",
->     "status": "pending"
->     "date": "2023-02-11",
->   },
->   {
->     "id": 8,
->     "userId": "string",
->     "products": "string",
->     "status": "shipped"
->     "date": "2023-02-13",
->   } ] 
-> ```
-
-  - GET api/v1/orders?start_date=:start_date&end_date=:end_date&status=:status - get a list of orders between the specified start and end dates, and with the specified status.
-    - Server should answer with status code 200 and array of records with start_date < date < end_date && status === status if it exists
-    - Server should answer with status code 400 and corresponding message if date is invalid (not uuid)
-    - Server should answer with status code 404 and corresponding message if record with start_date < date < end_date && status === status doesn't exist
-
-| Parameter    | Type   | Required | Description                                                             |
-|--------------|--------|----------|-------------------------------------------------------------------------|
-| `start_date` | date   | Yes      | The start date of the period to search for. Format should be YYYY-MM-DD |
-| `end_date`   | date   | Yes      | The end date of the period to search for. Format should be YYYY-MM-DD   |
-| `status`     | string | Yes      | The status of the orders to search for                                  |
-
-
-> Request:
-> ```
-> curl -X 'GET' \
-> 'api/v1/orders?start_date="2023-02-10"&end_date="2023-02-15&status=pending"
-> ```
-
-> Response body
-> ```
-> [ {
->     "id": 1,
->     "userId": "string",
->     "products": "string",
->     "date": "2023-02-11",
->     "status": "pending"
->   } ] 
-> ```
-
   - POST api/v1/orders - create record about new order and put it in database. The request body should contain the required information for creating a new order.
     - Server should answer with status code 201 and newly created record
     - Server should answer with status code 400 and corresponding message if request body does not contain required fields
@@ -518,7 +515,7 @@ _____
 > -d '{
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 >   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }'
@@ -529,7 +526,7 @@ _____
 > {
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 >   "status": "pending",
 >   "date": "2023-02-15T00:00:00+0400",
 > }
@@ -551,7 +548,7 @@ _____
 > -d '{
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 >   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }'
@@ -562,7 +559,7 @@ _____
 > {
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 >   "status": "pending"
 >   "date": "2023-02-15T00:00:00+0400",
 > }
@@ -603,12 +600,12 @@ _____
 > [{
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > },
 > {
 >   "id": 2,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > }]
 > ```
 
@@ -632,7 +629,7 @@ _____
 > {
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > }
 > ```
 
@@ -647,7 +644,7 @@ _____
 > -d '{
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > }'
 > ```
 
@@ -656,7 +653,7 @@ _____
 > {
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > }
 > ```
 
@@ -676,7 +673,7 @@ _____
 > -d '{
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > }'
 > ```
 
@@ -685,7 +682,7 @@ _____
 > {
 >   "id": 1,
 >   "userId": "string",
->   "products": "string",
+>   "products": ["string"],
 > }
 > ```
 
