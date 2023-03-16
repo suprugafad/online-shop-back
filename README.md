@@ -81,6 +81,10 @@ _____
 > ```
 
   - GET api/v1/users?name=:name - get a list of users whose name partially matches the specified parameter.
+    - Server should answer with status code 200 and array of records with name === name if it exists
+    - Server should answer with status code 400 and corresponding message if name is invalid (not uuid)
+    - Server should answer with status code 404 and corresponding message if record with name === name doesn't exist
+
 
 | Parameter | Type   | Required | Description                                 |
 |-----------|--------|----------|---------------------------------------------|
@@ -254,6 +258,9 @@ _____
 > ```
 
   - GET api/v1/products?category=:category - get a list of products which title partially matches the specified parameter.
+    - Server should answer with status code 200 and array of records with category === category if it exists
+    - Server should answer with status code 400 and corresponding message if category is invalid (not uuid)
+    - Server should answer with status code 404 and corresponding message if record with category === category doesn't exist
 
 | Parameter  | Type    | Required | Description                                        |
 |------------|---------|----------|----------------------------------------------------|
@@ -437,6 +444,9 @@ _____
 > ```
 
   - GET api/v1/orders?start_date=:start_date&end_date=:end_date - get a list of orders between the specified start and end dates.
+    - Server should answer with status code 200 and array of records with start_date < date < end_date if it exists
+    - Server should answer with status code 400 and corresponding message if date is invalid (not uuid)
+    - Server should answer with status code 404 and corresponding message if record with start_date < date < end_date doesn't exist
 
 | Parameter      | Type   | Required    | Description                                                              |
 |----------------|--------|-------------|--------------------------------------------------------------------------|
@@ -469,6 +479,9 @@ _____
 > ```
 
   - GET api/v1/orders?start_date=:start_date&end_date=:end_date&status=:status - get a list of orders between the specified start and end dates, and with the specified status.
+    - Server should answer with status code 200 and array of records with start_date < date < end_date && status === status if it exists
+    - Server should answer with status code 400 and corresponding message if date is invalid (not uuid)
+    - Server should answer with status code 404 and corresponding message if record with start_date < date < end_date && status === status doesn't exist
 
 | Parameter    | Type   | Required | Description                                                             |
 |--------------|--------|----------|-------------------------------------------------------------------------|
