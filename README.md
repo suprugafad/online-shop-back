@@ -15,7 +15,7 @@
 ______
 
 ## Description <a name="descr"></a>
-This project is a clothing shop. There are two roles of users: admin and customer. This application has the ability to add, update, delete and get information about users, products, carts and orders.
+This project is a clothing shop. This application has the following functionality: add, update, delete and get information about users, products, carts and orders.
 _____
 ## Technical requirements <a name="tech"></a>
 - Programming language - Javascript
