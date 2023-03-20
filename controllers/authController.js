@@ -13,9 +13,9 @@ const generateAccessToken = (id, roles) => {
 class authController {
   auth (req, res) {
     try {
-      const {id, password} = req.body;
+      const {username, password} = req.body;
 
-      if (user.id !== id) {
+      if (user.username !== username) {
         return res.status(400).json({message: `User does not exist.`});
       }
 
