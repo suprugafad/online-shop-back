@@ -8,9 +8,10 @@ module.exports = function requireAuth(req, res, next) {
   } else {
     try {
       req.user = jwt.verifyToken(token, secretKey);
+
       next();
     } catch (err) {
-      res.status(401).send('Unauthorized');
+      res.status(401).send(`Unauthorized ${req.user}`);
     }
   }
 }

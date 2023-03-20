@@ -6,7 +6,7 @@ const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.post('/auth', authMW, controller.auth);
+app.post('/login', authMW, controller.auth);
 
 const start = () => {
     try {
