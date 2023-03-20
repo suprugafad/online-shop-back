@@ -4,10 +4,11 @@
 2. [Technical requirements](#tech)
 3. [Base URL](#url)
 4. [Implementation details](#impl) <br>
-   4.1 [Endpoint api/v1/users](#users) <br>
-   4.2 [Endpoint api/v1/products](#prod) <br>
-   4.3 [Endpoint api/v1/orders](#orders) <br>
-   4.4 [Endpoint api/v1/carts](#carts)
+   4.1 [Authentication](#auth) <br>
+   4.2 [Endpoint api/v1/users](#users) <br>
+   4.3 [Endpoint api/v1/products](#prod) <br>
+   4.4 [Endpoint api/v1/orders](#orders) <br>
+   4.5 [Endpoint api/v1/carts](#carts)
 5. [Objects](#obj)
 6. [Install](#inst)
 7. [Run](#run)
@@ -27,8 +28,28 @@ _____
 _____
 
 ## Implementation details <a name="imple"></a>
-### 1.  Endpoint api/v1/users: <a name="users"></a>
-  - GET api/v1/users - get all users
+### 1. Authentication. <a name="auth"></a>
+- Endpoint: `api/v2/login`
+- Standard: JWT
+> Request
+> ```
+> curl -X 'POST' \
+> ‘/login’ \
+> {
+>   "username": "username",
+>   "password": "password"
+> }
+> ```
+
+> Response body
+> ```
+> {
+>   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwicm9sZXMiOlsiQURNSU4iXSwiZXhwIjoiMTY3OTMzMTQ1MDI0aCJ9.4d2cdf71-78e57a475bed0bd4414526df-196a8ed6"
+> }
+> ```
+
+### 2.  Endpoint `api/v2/users`: <a name="users"></a>
+  - GET `api/v2/users` - get all users
       - Server should answer with status code 200 and all users records.
       - Possible parameters:
 
@@ -90,7 +111,7 @@ _____
 > ```
 
 
-  - GET api/v1/users/{userId} - get one user by ID
+  - GET `api/v2/users/{userId}` - get one user by ID
     - Server should answer with status code 200 and record with id === userId if it exists
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
@@ -116,7 +137,7 @@ _____
 > }
 > ```
 
-  - POST api/v1/users - create record about new user and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
+  - POST `api/v2/users` - create record about new user and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
     - Server should answer with status code 201 and newly created record
     - Server should answer with status code 400 and corresponding message if request body does not contain required fields
 
@@ -144,7 +165,7 @@ _____
 > }
 > ```
 
-  - PUT api/v1/users/{userId} - update existing user. The request body should contain the updated information for the product.
+  - PUT `api/v2/users/{userId}` - update existing user. The request body should contain the updated information for the product.
     - Server should answer with status code 200 and update the record
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
@@ -177,7 +198,7 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/users/{userId} - delete existing user from database
+  - DELETE `api/v2/users/{userId}` - delete existing user from database
     - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if userId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === userId doesn't exist
@@ -197,8 +218,8 @@ _____
 > No Content
 > ```
 
-### 2. Endpoint api/v1/products: <a name="prod"></a>
-  - GET api/v1/products - get all products
+### 3. Endpoint `api/v2/products`: <a name="prod"></a>
+  - GET `api/v2/products` - get all products
     - Server should answer with status code 200 and all products records
     - Possible query parameters:
 
@@ -239,7 +260,7 @@ _____
 >   "modelId": 2,
 > }]
 
-  - GET api/v1/products/{productId} - get one product
+  - GET `api/v2/products/{productId}` - get one product
     - Server should answer with status code 200 and record with id === productId if it exists
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
@@ -268,7 +289,7 @@ _____
 > }
 > ```
 
-  - GET api/v1/products?category=:category - get a list of products which title partially matches the specified parameter.
+  - GET `api/v2/products?category=:category` - get a list of products which title partially matches the specified parameter.
     - Server should answer with status code 200 and array of records with category === category if it exists
     - Server should answer with status code 400 and corresponding message if category is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with category === category doesn't exist
@@ -307,7 +328,7 @@ _____
 >   } ] 
 > ```
 
-  - POST api/v1/products - create record about new product and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
+  - POST `api/v2/products` - create record about new product and put it in database. The request body should contain the required information for creating a new product, such as name, price, description and image.
     - Server should answer with status code 201 and newly created record
     - Server should answer with status code 400 and corresponding message if request body does not contain required fields
 
@@ -341,7 +362,7 @@ _____
 > }
 > ```
 
-  - PUT api/v1/products/{productId} - update existing product. The request body should contain the updated information for the product.
+  - PUT `api/v2/products/{productId}` - update existing product. The request body should contain the updated information for the product.
     - Server should answer with status code 200 and update the record
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
@@ -380,7 +401,7 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/products/{productId} - delete existing product from database
+  - DELETE `api/v2/products/{productId}` - delete existing product from database
     - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if productId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === productId doesn't exist
@@ -400,8 +421,8 @@ _____
 > No Content
 > ```    
 
-### 3. Endpoint api/orders: <a name="orders"></a>
-  - GET api/v1/orders - get all orders
+### 4. Endpoint `api/v2/orders`: <a name="orders"></a>
+  - GET `api/v2/orders` - get all orders
     - Server should answer with status code 200 and all orders records
     - Possible query parameters:
 
@@ -478,7 +499,7 @@ _____
 >   } ] 
 > ```
 
-  - GET api/v1/orders/{orderId} - get one order
+  - GET `api/v2/orders/{orderId}` - get one order
     - Server should answer with status code 200 and record with id === orderId if it exists
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
@@ -504,7 +525,7 @@ _____
 > }
 > ```
 
-  - POST api/v1/orders - create record about new order and put it in database. The request body should contain the required information for creating a new order.
+  - POST `api/v2/orders` - create record about new order and put it in database. The request body should contain the required information for creating a new order.
     - Server should answer with status code 201 and newly created record
     - Server should answer with status code 400 and corresponding message if request body does not contain required fields
 
@@ -532,7 +553,7 @@ _____
 > }
 > ```
 
-  - PUT api/v1/orders/{orderId} - update existing order. The request body should contain the updated information for the order.
+  - PUT `api/v2/orders/{orderId}` - update existing order. The request body should contain the updated information for the order.
     - Server should answer with status code 200 and update record
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
@@ -565,7 +586,7 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/orders/{orderId} - delete existing order from database
+  - DELETE `api/v2/orders/{orderId}` - delete existing order from database
     - Server should answer with status code 204 if the record was found and delete record
     - Server should answer with status code 400 and corresponding message if orderId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === orderId doesn't exist
@@ -585,8 +606,8 @@ _____
 > No Content
 > ```   
 
-### 4. Endpoint api/carts: <a name="carts"></a>
-  - GET api/v1/carts - get all carts
+### 5. Endpoint `api/v2/carts`: <a name="carts"></a>
+  - GET `api/v2/carts` - get all carts
     - Server should answer with status code 200 and all carts records
 
 > Request
@@ -609,7 +630,7 @@ _____
 > }]
 > ```
 
-- GET api/v1/carts/{cartId} - get one cart
+- GET `api/v2/carts/{cartId}` - get one cart
   - Server should answer with status code 200 and record with id === cartId if it exists
   - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
   - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
@@ -633,7 +654,7 @@ _____
 > }
 > ```
 
-- POST api/v1/carts - create record about new cart and put it in database. The request body should contain the required information for creating a new cart.
+- POST `api/v2/carts` - create record about new cart and put it in database. The request body should contain the required information for creating a new cart.
   - Server should answer with status code 201 and newly created record
   - Server should answer with status code 400 and corresponding message if request body does not contain required fields
 
@@ -657,7 +678,7 @@ _____
 > }
 > ```
 
-  - PUT api/v1/carts/{cartsId} - update existing cart. The request body should contain the updated information for the cart.
+  - PUT `api/v2/carts/{cartsId}` - update existing cart. The request body should contain the updated information for the cart.
     - Server should answer with status code 200 and update the record
     - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
@@ -686,7 +707,7 @@ _____
 > }
 > ```
 
-  - DELETE api/v1/carts/{cartId} - delete existing cart from database
+  - DELETE `api/v2/carts/{cartId}` - delete existing cart from database
     - Server should answer with status code 204 if the record was found and delete the record
     - Server should answer with status code 400 and corresponding message if cartId is invalid (not uuid)
     - Server should answer with status code 404 and corresponding message if record with id === cartId doesn't exist
