@@ -1,4 +1,4 @@
-const crypto = require("crypto");
+const hash = require("./hash");
 
 class Jwt {
   generateToken(payload, secret, options) {
@@ -18,19 +18,16 @@ class Jwt {
     const base64UrlPayload = Buffer.from(JSON.stringify(tokenPayload)).toString('base64')
       .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
-    const signature = crypto.createHmac('sha256', secret).update(`${base64UrlHeader}.${base64UrlPayload}`).digest('base64')
-      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    const signature = hash.sha1(`${base64UrlHeader}.${base64UrlPayload}`);
 
     return `${base64UrlHeader}.${base64UrlPayload}.${signature}`;
   }
 
   verifyToken(token, secret) {
     const [headerEncoded, payloadEncoded, signatureEncoded] = token.split('.');
-
     const payload = JSON.parse(Buffer.from(payloadEncoded, 'base64').toString());
 
-    const expectedSignature = crypto.createHmac('sha256', secret).update(`${headerEncoded}.${payloadEncoded}`).digest('base64')
-      .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
+    const expectedSignature = hash.sha1(`${headerEncoded}.${payloadEncoded}`);
 
     if (signatureEncoded === expectedSignature && Math.floor(Date.now() / 1000) < payload.exp) {
       return payload;
