@@ -1,7 +1,8 @@
 const hash = require("./hash");
+const salt = require("./config/secrets")
 
 class Jwt {
-  generateToken(payload, secret, options) {
+  generateToken(payload, salt, options) {
     const header = {
       alg: 'HS256',
       typ: 'JWT'
@@ -18,16 +19,16 @@ class Jwt {
     const base64UrlPayload = Buffer.from(JSON.stringify(tokenPayload)).toString('base64')
       .replace(/=/g, '').replace(/\+/g, '-').replace(/\//g, '_');
 
-    const signature = hash.sha1(`${base64UrlHeader}.${base64UrlPayload}`);
+    const signature = hash.sha1(`${base64UrlHeader}.${base64UrlPayload}`, salt);
 
     return `${base64UrlHeader}.${base64UrlPayload}.${signature}`;
   }
 
-  verifyToken(token, secret) {
+  verifyToken(token, salt) {
     const [headerEncoded, payloadEncoded, signatureEncoded] = token.split('.');
     const payload = JSON.parse(Buffer.from(payloadEncoded, 'base64').toString());
 
-    const expectedSignature = hash.sha1(`${headerEncoded}.${payloadEncoded}`);
+    const expectedSignature = hash.sha1(`${headerEncoded}.${payloadEncoded}`, salt);
 
     if (signatureEncoded === expectedSignature && Math.floor(Date.now() / 1000) < payload.exp) {
       return payload;

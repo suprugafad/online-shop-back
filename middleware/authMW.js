@@ -1,4 +1,4 @@
-const secretKey = require('../config/secrets');
+const salt = require('../config/secrets');
 const jwt = require('../jwt');
 
 module.exports = function requireAuth(req, res, next) {
@@ -7,7 +7,7 @@ module.exports = function requireAuth(req, res, next) {
     res.status(401).send('Unauthorized');
   } else {
     try {
-      req.user = jwt.verifyToken(token, secretKey);
+      req.user = jwt.verifyToken(token, salt);
 
       next();
     } catch (err) {

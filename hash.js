@@ -1,6 +1,6 @@
 class Hash {
-  sha1(str) {
-    let utf8 = unescape(encodeURIComponent(str));
+  sha1(str, salt) {
+    let utf8 = unescape(encodeURIComponent(str + salt));
     let binary = "";
     for (let i = 0; i < utf8.length; i++) {
       binary += utf8.charCodeAt(i).toString(2).padStart(8, '0');
