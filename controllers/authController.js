@@ -1,6 +1,6 @@
 const jwt = require('../jwt');
 const { secret } = require("../config/secrets");
-const user = require('../models/User')
+const user = require('../db/models/User')
 
 const generateAccessToken = (id) => {
   const payload = {
