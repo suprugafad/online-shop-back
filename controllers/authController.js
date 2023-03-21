@@ -2,10 +2,9 @@ const jwt = require('../jwt');
 const { secret } = require("../config/secrets");
 const user = require('../models/User')
 
-const generateAccessToken = (id, roles) => {
+const generateAccessToken = (id) => {
   const payload = {
-    id,
-    roles,
+    id
   }
   return jwt.generateToken(payload, secret, {expiresIn: "24h"});
 }
@@ -23,7 +22,7 @@ class authController {
         return res.status(400).json({message: `Password is incorrect`});
       }
 
-      const token = generateAccessToken(user.id, user.roles);
+      const token = generateAccessToken(user.id);
 
       return res.json({token});
     } catch (e) {
