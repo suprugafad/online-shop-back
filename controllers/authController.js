@@ -4,9 +4,11 @@ const user = require('../models/User')
 
 const generateAccessToken = (id) => {
   const payload = {
-    id
+    iss: "shop.com",
+    sub: id,
+    exp: "24h"
   }
-  return jwt.generateToken(payload, secret, {expiresIn: "24h"});
+  return jwt.generateToken(payload, secret);
 }
 
 class authController {
