@@ -1,11 +1,12 @@
 {
   "name": "shop_solvd",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
-  "scripts": {
-
-  },
+  "scripts": {},
   "author": "Poida Alexandrina",
-  "license": "ISC"
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
 }
