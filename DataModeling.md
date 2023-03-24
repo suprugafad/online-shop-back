@@ -180,7 +180,7 @@ Information about one product in the cart.
 
 ### 3. Payment method
 
-| payment_status |
+| payment_method |
 |----------------|
 | cash           |
 | credit_card    |
