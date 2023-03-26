@@ -1,34 +1,35 @@
 # API documentation
 ## Content
-1. [Description](#descr)
-2. [Technical requirements](#tech)
-3. [Base URL](#url)
-4. [Implementation details](#impl) <br>
-   4.1 [Authentication](#auth) <br>
-   4.2 [Endpoint api/v1/users](#users) <br>
-   4.3 [Endpoint api/v1/products](#prod) <br>
-   4.4 [Endpoint api/v1/orders](#orders) <br>
-   4.5 [Endpoint api/v1/carts](#carts)
-5. [Objects](#obj)
-6. [Install](#inst)
-7. [Run](#run)
+1. [Description](#description)
+2. [Technical requirements](#technical-requirements)
+3. [Base URL](#base-url)
+4. [Implementation details](#implementation-details) <br>
+   4.1 [Authentication](#1-authentication) <br>
+   4.2 [Endpoint api/v1/users](#2-endpoint-apiv2users-) <br>
+   4.3 [Endpoint api/v1/products](#3-endpoint-apiv2products-) <br>
+   4.4 [Endpoint api/v1/orders](#4-endpoint-apiv2orders-) <br>
+   4.5 [Endpoint api/v1/carts](#5-endpoint-apiv2carts-)
+5. [Install](#install)
+6. [Run](#run-in-docker-container)
 
+### Data modeling you can find here: <br>
+[DataModeling.md](DataModeling.md)
 ______
 
-## Description <a name="descr"></a>
+## Description
 This project is a clothing shop. This application has the following functionality: add, update, delete and get information about users, products, carts and orders.
 _____
-## Technical requirements <a name="tech"></a>
+## Technical requirements
 - Programming language - Javascript
-- Database - MongoDB
+- Database - PostgreSQL
 - Docker
 _____
-## Base URL <a name="url"></a>
+## Base URL
 `http://localhost:3000`
 _____
 
-## Implementation details <a name="imple"></a>
-### 1. Authentication. <a name="auth"></a>
+## Implementation details
+### 1. Authentication.
 - Endpoint: `api/v2/login`
 - Standard: JWT
 > Request
@@ -48,7 +49,7 @@ _____
 > }
 > ```
 
-### 2.  Endpoint `api/v2/users`: <a name="users"></a>
+### 2.  Endpoint `api/v2/users`:
   - GET `api/v2/users` - get all users
       - Server should answer with status code 200 and all users records.
       - Possible parameters:
@@ -218,7 +219,7 @@ _____
 > No Content
 > ```
 
-### 3. Endpoint `api/v2/products`: <a name="prod"></a>
+### 3. Endpoint `api/v2/products`:
   - GET `api/v2/products` - get all products
     - Server should answer with status code 200 and all products records
     - Possible query parameters:
@@ -421,7 +422,7 @@ _____
 > No Content
 > ```    
 
-### 4. Endpoint `api/v2/orders`: <a name="orders"></a>
+### 4. Endpoint `api/v2/orders`:
   - GET `api/v2/orders` - get all orders
     - Server should answer with status code 200 and all orders records
     - Possible query parameters:
@@ -606,7 +607,7 @@ _____
 > No Content
 > ```   
 
-### 5. Endpoint `api/v2/carts`: <a name="carts"></a>
+### 5. Endpoint `api/v2/carts`:
   - GET `api/v2/carts` - get all carts
     - Server should answer with status code 200 and all carts records
 
@@ -728,44 +729,13 @@ _____
 > ```   
 
 - Requests to non-existing endpoints are handled (server answer with status code 404 and message with error)
-______  
-<a name="obj"></a>
-Users are stored as objects that have the following properties:
-  - id — unique identifier (string, uuid) generated on server side
-  - name — user's name (string, required)
-  - password — user's age (number, required)
-  - email — user’s email address (string, unique, required)
-  - isAdmin — if user is admin - true, if user is customer - false (boolean, required)
-
-Products are stored as objects that have the following properties:
-  - id — unique identifier (string, uuid) generated on server side
-  - title — product's title (string, required)
-  - description — product's description (string, required)
-  - category — product's category (string, required)
-  - brand — product's brand (string, required)
-  - price — product's price (number, required)
-  - image — product's image (string, required)
-  - modelId — product’s model (string, uuid)
-
-Models are stored as objects that have the following properties:
-  - id — unique identifier (string, uuid) generated on server side
-  - size — model's size (string, required)
-  - count — count of items (number, required)
-
-Orders are stored as objects that have the following properties:
-  - id — unique identifier (string, uuid) generated on server side
-  - userId — user's id (string, uuid)
-  - products — list of products (array of strings or empty array, required)
-  - status - product's status (string, required)
-  - date — list of products (date, required)
-
-Carts are stored as objects that have the following properties:
-- id — unique identifier (string, uuid) generated on server side
-- userId — user's id (string, uuid)
-- products — products that are in cart (array of strings or empty array, required)
 ______
 
-### Install <a name="inst"></a>
+# Data Modeling
+
+
+
+### Install 
 Clone this repo with command
 ```sh
 git clone https://github.com/suprugafad/shop_solvd.git
@@ -781,7 +751,7 @@ Install dependencies
 npm install
 ```
 
-### Run in docker container <a name="run"></a>
+### Run in docker container 
 For running application in Docker container you should have docker installed on your system
 
 Run app
