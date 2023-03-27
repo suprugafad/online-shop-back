@@ -1,12 +1,20 @@
 const express = require('express');
-const controller = require('./controllers/authController');
-const authMW = require('./middleware/authMW')
+const authController = require('./controllers/authController');
+const authMW = require('./middleware/authMW');
+const user = require('./controllers/userController');
 
 const PORT = process.env.PORT || 3000;
 
 const app = express();
 app.use(express.json());
-app.post('/login', authMW, controller.auth);
+
+app.post('/reg', authController.regUser);
+app.post('/login', authMW, authController.logUser);
+
+app.get('/users', user.getUsers);
+app.get('/users/:id', user.getUserById);
+app.put('/users/:id', user.updateUser);
+app.delete('/users/:id', user.deleteUser);
 
 const start = () => {
     try {
