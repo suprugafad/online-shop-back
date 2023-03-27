@@ -2,13 +2,13 @@ const hash = require("./hash");
 const salt = require("./config/secrets")
 
 class Jwt {
-  generateToken(payload, salt, options) {
+  generateToken(payload, salt) {
     const header = {
       alg: 'HS256',
       typ: 'JWT'
     };
 
-    const expiresIn = options.expiresIn || '1h';
+    const expiresIn = payload.exp || '1h';
     const expiryDate = Math.floor(Date.now() / 1000) + expiresIn;
 
     const tokenPayload = { ...payload, exp: expiryDate };
