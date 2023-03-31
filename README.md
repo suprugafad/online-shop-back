@@ -767,6 +767,6 @@ docker compose down
 ### Run as is 
 Run command
 ```sh
-node index.js
+node index.ts
 ```
 
