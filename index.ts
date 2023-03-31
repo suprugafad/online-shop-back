@@ -1,4 +1,3 @@
-//import express, { Application } from 'express';
 import authController from './controllers/authController';
 import authMW from './middleware/authMW';
 import userController from './controllers/userController';
@@ -6,6 +5,8 @@ import productController from './controllers/productController';
 import { Application } from "express";
 const express = require('express');
 
+const dotenv = require('dotenv');
+dotenv.config();
 
 const PORT: string | number = process.env.PORT || 3000;
 

@@ -4,7 +4,7 @@ const fs = require('fs');
 const pool = new Pool({
   user: 'postgres',
   host: 'localhost',
-  database: 'shopdb',
+  database: 'shop',
   password: 'poshik',
   port: 5432,
 });
