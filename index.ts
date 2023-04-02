@@ -3,6 +3,7 @@ import authMW from './middleware/authMW';
 import userController from './controllers/userController';
 import productController from './controllers/productController';
 import { Application } from "express";
+import cartItemController from "./controllers/cartItemController";
 const express = require('express');
 
 const dotenv = require('dotenv');
@@ -25,6 +26,8 @@ app.get('/products', productController.getProducts);
 app.post('/products', productController.postProduct);
 
 app.post('/newPassword', authMW, authController.changePassword);
+
+app.post('/cartItem', cartItemController.create);
 
 const start = (): void => {
     try {

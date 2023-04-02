@@ -1,10 +1,10 @@
 import { query } from '../db';
 import ProductDTO from '../dtos/productDTO';
-import {IRepository} from "./IRepository";
+import { IRepository } from "./IRepository";
 
 export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   async create(product: ProductDTO): Promise<void> {
-    const queryText = `INSERT INTO public.product (title, description, price, image) VALUES ($1, $2, $3, $4);`;
+    const queryText = `INSERT INTO product (title, description, price, image) VALUES ($1, $2, $3, $4);`;
     const values = [product.title, product.description, product.price, product.image];
 
     try {
@@ -65,5 +65,4 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
       throw new Error('Unable to update product');
     }
   }
-
 }
