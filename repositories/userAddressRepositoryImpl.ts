@@ -83,7 +83,7 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
   }
 
   async deleteByUserId(userId: number): Promise<void> {
-    const queryText = `DELETE FROM user_addresses WHERE user_id = $1;`;
+    const queryText = `DELETE FROM user_address WHERE user_id = $1;`;
     const values = [userId];
 
     try {
