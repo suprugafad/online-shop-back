@@ -12,7 +12,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
     } catch (err) {
       throw new Error('Unable to create address');
     }
-  }
+  };
 
   async getAll(): Promise<AddressDTO[]> {
     const queryText = `SELECT id, country, city, street, house, apartment FROM address ORDER BY id ASC;`;
@@ -24,7 +24,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
     } catch (err) {
       throw new Error('Unable to get all addresses');
     }
-  }
+  };
 
   async delete(id: number): Promise<void> {
     const queryText = 'DELETE FROM address WHERE id = $1';
@@ -35,7 +35,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
     } catch (err) {
       throw new Error('Unable to delete address');
     }
-  }
+  };
 
   async getById(id: number): Promise<AddressDTO | null> {
     const queryText = `SELECT id, country, city, street, house, apartment FROM address WHERE id = $1;`;
@@ -53,7 +53,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
       throw new Error('Unable to get address');
     }
     return null;
-  }
+  };
 
   async update(address: AddressDTO): Promise<void> {
     const queryText = 'UPDATE address SET country = $1, city = $2, street = $3, house = $4, apartment = $5 WHERE id = $6';
@@ -64,7 +64,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
     } catch (err) {
       throw new Error('Unable to update address');
     }
-  }
+  };
 
   async getByCountry(country: string): Promise<AddressDTO[]> {
     const queryText = 'SELECT id, country, city, street, house, apartment FROM address WHERE country = $1';
@@ -77,7 +77,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
     } catch (err) {
       throw new Error('Unable to get addresses by country');
     }
-  }
+  };
 
   async getByCity(city: string): Promise<AddressDTO[]> {
     const queryText = 'SELECT id, country, city, street, house, apartment FROM address WHERE city = $1';
@@ -90,7 +90,7 @@ export class AddressRepositoryImpl implements IAddressRepository {
     } catch (err) {
       throw new Error('Unable to get addresses by city');
     }
-  }
+  };
 
   // ne uverena chto on nuzhen
   async getByOrderId(orderId: number): Promise<AddressDTO | null> {
@@ -109,5 +109,5 @@ export class AddressRepositoryImpl implements IAddressRepository {
       throw new Error('Unable to get address by order ID');
     }
     return null;
-  }
+  };
 }

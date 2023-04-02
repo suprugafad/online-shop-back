@@ -18,7 +18,7 @@ export class UserRepositoryImpl implements IUserRepository {
     } catch (err) {
       throw new Error('Unable to create user');
     }
-  }
+  };
 
   async getUserByEmail(email: string): Promise<{ password: any; userDTO: UserDTO } | null> {
     const queryText = `SELECT id, username, email, password FROM users WHERE email = $1;`;
@@ -36,7 +36,7 @@ export class UserRepositoryImpl implements IUserRepository {
       throw new Error('Unable to get user');
     }
     return null;
-  }
+  };
 
   async getByIdWithPassword(id: number): Promise<{ password: any; userDTO: UserDTO } | null> {
     const queryText = `SELECT id, username, email, password FROM users WHERE id = $1;`;
@@ -54,7 +54,7 @@ export class UserRepositoryImpl implements IUserRepository {
       throw new Error('Unable to get user');
     }
     return null;
-  }
+  };
 
   async updatePassword(id: number, newPassword: string): Promise<void> {
       const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
@@ -67,7 +67,7 @@ export class UserRepositoryImpl implements IUserRepository {
       } catch (err) {
         throw new Error('Unable to update user password');
       }
-  }
+  };
 
   async getAll(): Promise<UserDTO[]> {
     const queryText = `SELECT id, username, email FROM users ORDER BY id ASC`;
@@ -79,18 +79,18 @@ export class UserRepositoryImpl implements IUserRepository {
     } catch (err) {
       throw new Error('Unable to get all users');
     }
-  }
+  };
 
   async update(user: UserDTO): Promise<void> {
-      const queryText = 'UPDATE user SET username = $1, email = $2 WHERE id = $3';
-      const values = [user.username, user.email, user.id];
+    const queryText = 'UPDATE user SET username = $1, email = $2 WHERE id = $3';
+    const values = [user.username, user.email, user.id];
 
-      try {
-        await query(queryText, values);
-      } catch (err) {
-        throw new Error('Unable to update user');
-      }
-  }
+    try {
+      await query(queryText, values);
+    } catch (err) {
+      throw new Error('Unable to update user');
+    }
+  };
 
   async delete(id: number): Promise<void> {
     const queryText = 'DELETE FROM user WHERE id = $1';
@@ -101,7 +101,7 @@ export class UserRepositoryImpl implements IUserRepository {
     } catch (err) {
       throw new Error('Unable to delete user');
     }
-  }
+  };
 
   async getById(id: number): Promise<UserDTO | null> {
     const queryText = `SELECT id, username, email, password FROM users WHERE id = $1;`;
@@ -119,5 +119,5 @@ export class UserRepositoryImpl implements IUserRepository {
       throw new Error('Unable to get user');
     }
     return null;
-  }
+  };
 }
