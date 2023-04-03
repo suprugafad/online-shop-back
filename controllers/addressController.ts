@@ -8,11 +8,15 @@ class AddressController {
     try {
       const { country, city, street, house, apartment } = req.body;
 
-      const newAddress = new AddressDTO(undefined, country, city, street, house, apartment);
+      const newAddress = new AddressDTO(null, country, city, street, house, apartment);
 
-      await addressRepository.create(newAddress);
-
-      res.status(200).send('Address created successfully');
+      if (!await addressRepository.isExist(newAddress)) {
+        await addressRepository.create(newAddress);
+        res.status(200).send('Address created successfully');
+      } else {
+        res.status(400).send(`Such address is already exist`);
+        return;
+      }
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Error creating address.' });
@@ -94,6 +98,10 @@ class AddressController {
     try {
       const addresses = await addressRepository.getByCountry(country);
 
+      if (!addresses) {
+        return res.status(404).json({ message: 'Addresses by country not found.' });
+      }
+
       res.status(200).json(addresses);
     } catch (err) {
       console.error(err);
@@ -106,6 +114,10 @@ class AddressController {
 
     try {
       const addresses = await addressRepository.getByCity(city);
+
+      if (!addresses) {
+        return res.status(404).json({ message: 'Addresses by city not found.' });
+      }
 
       res.status(200).json(addresses);
     } catch (err) {

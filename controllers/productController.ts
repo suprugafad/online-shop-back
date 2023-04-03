@@ -9,6 +9,10 @@ class productController {
     try {
       const products = await productRepository.getAll();
 
+      if (!products) {
+        return res.status(404).json({message: 'Products not found'});
+      }
+
       res.status(200).json(products);
     } catch (err) {
       console.error(err);
@@ -23,7 +27,7 @@ class productController {
       const product = await productRepository.getById(id);
 
       if (!product) {
-        return res.status(404).json({message: 'product not found'});
+        return res.status(404).json({message: 'Product not found'});
       }
 
       res.status(200).json(product);
@@ -41,7 +45,7 @@ class productController {
       const product = await productRepository.getById(id);
 
       if (!product) {
-        return res.status(404).json({message: 'User not found.'});
+        return res.status(404).json({message: 'Product not found.'});
       }
 
       const newProduct = new ProductDTO(product.id, title || product.title, description || product.description, price || product.price, image || product.image );
@@ -76,14 +80,14 @@ class productController {
     }
   };
 
-  deleteProduct  = async (req: any, res: any) => {
+  public deleteProduct  = async (req: any, res: any) => {
     try {
       const id = parseInt(req.params.id);
 
       const user = await productRepository.getById(id);
 
       if (!user) {
-        return res.status(404).json({ message: 'User not found.' });
+        return res.status(404).json({ message: 'Product not found.' });
       }
 
       await productRepository.delete(id);

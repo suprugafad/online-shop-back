@@ -110,4 +110,17 @@ export class AddressRepositoryImpl implements IAddressRepository {
     }
     return null;
   };
+
+  async isExist(address: AddressDTO): Promise<boolean> {
+    const queryText = 'SELECT id FROM address WHERE country = $1, city = $2, street = $3, house = $4, apartment = $5';
+    const values = [address.country, address.city, address.street, address.house, address.apartment];
+
+    try {
+      const result = await query(queryText, values);
+
+      return result.rows.length !== 0;
+    } catch (err) {
+      throw new Error('Unable to get address by order ID');
+    }
+  };
 }

@@ -1,6 +1,7 @@
 import CartItemDTO from "../dtos/cartItemDTO";
 import { query } from "../db";
 import { ICartItemRepository } from "./interfaces/ICartItemRepository";
+import cartItemDTO from "../dtos/cartItemDTO";
 
 export class CartItemRepositoryImpl implements ICartItemRepository {
   async create(cartItem: CartItemDTO): Promise<void> {
@@ -45,9 +46,9 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, product_id, quantity, cart_id} = result.rows[0];
+        const {id, productId, quantity, cartId} = result.rows[0];
 
-        return new CartItemDTO(id, product_id, quantity, cart_id);
+        return new CartItemDTO(id, productId, quantity, cartId);
       }
     } catch (err) {
       throw new Error('Unable to get cart item');
@@ -73,14 +74,14 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
     try {
       const result = await query(queryText, values);
 
-      return result.rows.map(row => new CartItemDTO(row.id, row.product_id, row.quantity, row.cart_id));
+      return result.rows.map(row => new CartItemDTO(row.id, row.productId, row.quantity, row.cartId));
     } catch (err) {
       throw new Error('Unable to get cart items for cart');
     }
   }
 
   async getItemCount(cartId: number): Promise<number> {
-    const queryText = 'SELECT SUM(quantity) as count FROM cart_item WHERE cart_id = $1';
+    const queryText = 'SELECT SUM(quantity) as count FROM cart_item WHERE cart_id = $1;';
     const values = [cartId];
 
     try {
@@ -90,6 +91,23 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
     } catch (err) {
       throw new Error('Unable to get cart item count');
     }
-  }
+  };
 
+  async getByProductIdAndCartId(productId: number, cartId: number):Promise<cartItemDTO | null> {
+    const queryText = 'SELECT id, product_id, quantity, cart_id FROM cart_item WHERE product_id = $1 AND cart_id = $2;';
+    const values = [productId, cartId];
+
+    try {
+      const result = await query(queryText, values);
+
+      if (result.rows.length > 0) {
+        const {id, productId, quantity, cartId} = result.rows[0];
+
+        return new CartItemDTO(id, productId, quantity, cartId);
+      }
+    } catch (err) {
+      throw new Error('Unable to get cart item');
+    }
+    return null;
+  }
 }
