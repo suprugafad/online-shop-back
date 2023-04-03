@@ -13,6 +13,10 @@ class ProductCategoryController {
     try {
       const productCategories = productCategoryRepository.getAll();
 
+      if (!productCategories) {
+        return res.status(404).json({message: 'Product_categories not found'});
+      }
+
       res.status(200).json(productCategories);
     } catch (err) {
       console.error(err);
@@ -25,6 +29,10 @@ class ProductCategoryController {
       const categoryId = parseInt(req.params.categoryId);
 
       const products = await productCategoryRepository.getProductsByCategoryId(categoryId);
+
+      if (!products) {
+        return res.status(404).json({message: 'Product_categories by id not found'});
+      }
 
       res.status(200).json(products);
     } catch (err) {
@@ -61,12 +69,12 @@ class ProductCategoryController {
       const userAddress = await productCategoryRepository.getById(id);
 
       if (!userAddress) {
-        return res.status(404).json({message: 'product_category not found'});
+        return res.status(404).json({message: 'Product_category not found'});
       }
 
       await productCategoryRepository.delete(id);
 
-      res.status(200).send(`product_category deleted with ID: ${id}`);
+      res.status(200).send(`Product_category deleted with ID: ${id}`);
     } catch (err) {
       console.error(err);
       res.status(500).json({message: 'Error deleting product_category'});
@@ -113,7 +121,7 @@ class ProductCategoryController {
       const product = await productRepository.getById(productId);
 
       if (!product) {
-        return res.status(404).json({ message: 'product_category not found' });
+        return res.status(404).json({ message: 'Product_category not found' });
       }
 
       await productCategoryRepository.deleteByProductId(productId);
