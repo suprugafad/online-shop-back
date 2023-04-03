@@ -20,7 +20,7 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
     try {
       const result = await query(queryText);
 
-      return result.rows.map(row => new UserAddressDTO(row.id, row.user_id, row.address_id));
+      return result.rows.map(row => new UserAddressDTO(row.id, row.userId, row.addressId));
     } catch (err) {
       throw new Error('Unable to get all user addresses');
     }
@@ -44,6 +44,24 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
     return null;
   };
 
+  async getByUserIdAndAddressId(userId: number, addressId: number): Promise<UserAddressDTO | null> {
+    const queryText = `SELECT id, user_id, address_id FROM user_address WHERE user_id = $1 AND address_id = $2;`;
+    const values = [userId, addressId];
+
+    try {
+      const result = await query(queryText, values);
+
+      if (result.rows.length > 0) {
+        const {id, userId, addressId} = result.rows[0];
+
+        return new UserAddressDTO(id, userId, addressId);
+      }
+    } catch (err) {
+      throw new Error('Unable to get user_address by user_id and address_id');
+    }
+    return null;
+  }
+
   async getAddressesByUserId(userId: number): Promise<UserAddressDTO[] | null> {
     const queryText = `SELECT id, user_id, address_id FROM user_address WHERE user_id = $1`;
     const values = [userId];
@@ -52,7 +70,7 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        return result.rows.map(row => new UserAddressDTO(row.id, row.user_id, row.address_id));
+        return result.rows.map(row => new UserAddressDTO(row.id, row.userId, row.addressId));
       }
     } catch (err) {
       throw new Error('Unable to get user addresses by user id');
@@ -69,7 +87,7 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
     } catch (err) {
       throw new Error('Unable to update user address');
     }
-  }
+  };
 
   async delete(id: number): Promise<void> {
     const queryText = `DELETE FROM user_address WHERE id = $1`;
@@ -80,7 +98,7 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
     } catch (err) {
       throw new Error('Unable to delete user address');
     }
-  }
+  };
 
   async deleteByUserId(userId: number): Promise<void> {
     const queryText = `DELETE FROM user_address WHERE user_id = $1;`;
