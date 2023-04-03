@@ -1,10 +1,11 @@
 import UserAddressDTO from '../dtos/userAddressDTO';
 import { UserAddressRepositoryImpl } from '../repositories/userAddressRepositoryImpl';
+import {Request, Response} from "express";
 
 const UserAddressRepository = new UserAddressRepositoryImpl();
 
 export class UserAddressController {
-  public getAllUserAddress = async (req: any, res: any) => {
+  public getAllUserAddress = async (req: Request, res: Response) => {
     try {
       const userAddresses = UserAddressRepository.getAll();
 
@@ -19,14 +20,14 @@ export class UserAddressController {
     }
   };
 
-  public getUserAddressById = async (req: any, res: any): Promise<void> => {
+  public getUserAddressById = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = parseInt(req.params.id);
 
       const userAddress = await UserAddressRepository.getById(id);
 
       if (!userAddress) {
-        return res.status(404).json({message: 'User_address not found'});
+        res.status(404).json({message: 'User_address not found'});
       }
 
       res.status(200).json(userAddress);
@@ -36,14 +37,14 @@ export class UserAddressController {
     }
   };
 
-  public getUserAddressByUserId = async (req: any, res: any): Promise<void> => {
+  public getUserAddressByUserId = async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = parseInt(req.params.userId);
 
       const userAddress = await UserAddressRepository.getAddressesByUserId(userId);
 
       if (!userAddress) {
-        return res.status(404).json({message: 'User_address not found'});
+        res.status(404).json({message: 'User_address not found'});
       }
 
       res.status(200).json(userAddress);
@@ -53,13 +54,13 @@ export class UserAddressController {
     }
   };
 
-  public createUserAddress = async (req: any, res: any): Promise<void> => {
+  public createUserAddress = async (req: Request, res: Response): Promise<void> => {
     const {userId, addressId} = req.body;
 
     const existingUserAddress = await UserAddressRepository.getByUserIdAndAddressId(userId, addressId);
 
     if (existingUserAddress) {
-      return res.status(400).json({ message: 'Product is already associated with the category' });
+      res.status(400).json({ message: 'Product is already associated with the category' });
     }
 
     try {
@@ -73,14 +74,14 @@ export class UserAddressController {
     }
   };
 
-  public deleteUserAddress = async (req: any, res: any): Promise<void> => {
+  public deleteUserAddress = async (req: Request, res: Response): Promise<void> => {
     try {
       const id = parseInt(req.params.id);
 
       const userAddress = await UserAddressRepository.getById(id);
 
       if (!userAddress) {
-        return res.status(404).json({message: 'User_address not found'});
+        res.status(404).json({message: 'User_address not found'});
       }
 
       await UserAddressRepository.delete(id);
@@ -92,14 +93,14 @@ export class UserAddressController {
     }
   };
 
-  public deleteUserAddressByUserId = async (req: any, res: any): Promise<void> => {
+  public deleteUserAddressByUserId = async (req: Request, res: Response): Promise<void> => {
     try {
       const userId = parseInt(req.params.userId);
 
       const userAddresses = await UserAddressRepository.getAddressesByUserId(userId);
 
       if (!userAddresses) {
-        return res.status(404).json({message: 'user_addresses not found for this user'});
+        res.status(404).json({message: 'user_addresses not found for this user'});
       }
 
       await UserAddressRepository.deleteByUserId(userId);

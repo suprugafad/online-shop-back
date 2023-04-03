@@ -1,10 +1,11 @@
 import CartItemDTO from '../dtos/cartItemDTO';
 import { CartItemRepositoryImpl } from '../repositories/cartItemRepositoryImpl';
+import {Request, Response} from "express";
 
 const cartItemRepository = new CartItemRepositoryImpl();
 
 class CartItemController {
-  public createCartItem = async (req: any, res: any) => {
+  public createCartItem = async (req: Request, res: Response) => {
     try {
       const { productId, quantity, cartId } = req.body;
       const existingCartItem = await cartItemRepository.getByProductIdAndCartId(productId, cartId);
@@ -26,7 +27,7 @@ class CartItemController {
     }
   };
 
-  public getAllCartItems = async (req: any, res: any) => {
+  public getAllCartItems = async (req: Request, res: Response) => {
     try {
       const cartItems = await cartItemRepository.getAll();
 
@@ -37,7 +38,7 @@ class CartItemController {
     }
   };
 
-  public deleteCartItem = async (req: any, res: any) => {
+  public deleteCartItem = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const cartItem = await cartItemRepository.getById(id);
@@ -55,7 +56,7 @@ class CartItemController {
     }
   };
 
-  public getByIdCartItem = async (req: any, res: any) => {
+  public getByIdCartItem = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 
@@ -72,7 +73,7 @@ class CartItemController {
     }
   };
 
-  public updateCartItem = async (req: any, res: any) => {
+  public updateCartItem = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const { productId, quantity, cartId } = req.body;
@@ -95,7 +96,7 @@ class CartItemController {
     }
   };
 
-  public getAllByCartId = async (req: any, res: any) => {
+  public getAllByCartId = async (req: Request, res: Response) => {
     try {
       const cartId = parseInt(req.params.cartId);
 
@@ -108,7 +109,7 @@ class CartItemController {
     }
   };
 
-  public getItemCount = async (req: any, res: any) => {
+  public getItemCount = async (req: Request, res: Response) => {
     try {
       const cartId = parseInt(req.params.cartId);
 

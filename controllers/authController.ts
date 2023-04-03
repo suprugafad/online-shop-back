@@ -1,13 +1,14 @@
 import { secret } from '../config/secrets';
 import UserDTO from '../dtos/userDTO';
 import { UserRepositoryImpl } from '../repositories/userRepositoryImpl';
+import {Request, Response} from "express";
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 
 const userRepository = new UserRepositoryImpl();
 
 class AuthController {
-  public regUser = async (req: any, res: any) => {
+  public regUser = async (req: Request, res: Response) => {
     try {
       const {username, email, password} = req.body;
 
@@ -26,7 +27,7 @@ class AuthController {
     }
   };
 
-  public logUser = async (req: any, res: any) => {
+  public logUser = async (req: Request, res: Response) => {
     try {
       const { email, password } = req.body;
 
@@ -59,7 +60,7 @@ class AuthController {
     }
   };
 
-  public changePassword = async (req: any, res: any) => {
+  public changePassword = async (req: Request, res: Response) => {
     try {
       const { userId, currentPassword, newPassword } = req.body;
 

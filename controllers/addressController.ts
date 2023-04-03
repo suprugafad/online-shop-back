@@ -1,10 +1,12 @@
+import {Request, Response} from "express";
+
 const AddressDTO = require('../dtos/addressDTO')
 import { AddressRepositoryImpl } from '../repositories/addressRepositoryImpl';
 
 const addressRepository = new AddressRepositoryImpl();
 
 class AddressController {
-  public createAddress = async (req: any, res: any) => {
+  public createAddress = async (req: Request, res: Response) => {
     try {
       const { country, city, street, house, apartment } = req.body;
 
@@ -23,7 +25,7 @@ class AddressController {
     }
   };
 
-  public getAddresses = async (req: any, res: any) => {
+  public getAddresses = async (req: Request, res: Response) => {
     try {
       const addresses = await addressRepository.getAll();
 
@@ -34,7 +36,7 @@ class AddressController {
     }
   };
 
-  public deleteAddress = async (req: any, res: any) => {
+  public deleteAddress = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
 
     try {
@@ -53,7 +55,7 @@ class AddressController {
     }
   };
 
-  public updateAddress = async (req: any, res: any) => {
+  public updateAddress = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     const { country, city, street, house, apartment } = req.body;
 
@@ -75,7 +77,7 @@ class AddressController {
     }
   };
 
-  public getAddressById = async (req: any, res: any) => {
+  public getAddressById = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
 
     try {
@@ -92,7 +94,7 @@ class AddressController {
     }
   };
 
-  public getAddressesByCountry = async (req: any, res: any) => {
+  public getAddressesByCountry = async (req: Request, res: Response) => {
     const country = req.params.country;
 
     try {
@@ -109,7 +111,7 @@ class AddressController {
     }
   };
 
-  public getAddressesByCity = async (req: any, res: any) => {
+  public getAddressesByCity = async (req: Request, res: Response) => {
     const city = req.params.city;
 
     try {
@@ -126,7 +128,7 @@ class AddressController {
     }
   };
 
-  public getAddressByOrderId = async (req: any, res: any) => {
+  public getAddressByOrderId = async (req: Request, res: Response) => {
     const orderId = parseInt(req.params.orderId);
 
     try {

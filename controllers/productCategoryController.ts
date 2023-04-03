@@ -3,13 +3,14 @@ import ProductCategoryDTO from "../dtos/productCategoryDTO";
 import { ProductCategoryRepositoryImpl } from "../repositories/productCategoryRepositoryImpl";
 import CategoryRepositoryImpl from "../repositories/categoryRepositoryImpl";
 import {ProductRepositoryImpl} from "../repositories/productRepositoryImpl";
+import {Request, Response} from "express";
 
 const productCategoryRepository = new ProductCategoryRepositoryImpl();
 const categoryRepository = new CategoryRepositoryImpl();
 const productRepository = new ProductRepositoryImpl();
 
 class ProductCategoryController {
-  public getAllCategoryProduct = async (req: any, res: any) => {
+  public getAllCategoryProduct = async (req: Request, res: Response) => {
     try {
       const productCategories = productCategoryRepository.getAll();
 
@@ -24,7 +25,7 @@ class ProductCategoryController {
     }
   };
 
-  public getProductsByCategoryId = async (req: any, res: any) => {
+  public getProductsByCategoryId = async (req: Request, res: Response) => {
     try {
       const categoryId = parseInt(req.params.categoryId);
 
@@ -41,7 +42,7 @@ class ProductCategoryController {
     }
   };
 
-  public createProductCategory = async (req: any, res: any) => {
+  public createProductCategory = async (req: Request, res: Response) => {
     try {
       const { categoryId, productId } = req.body;
 
@@ -62,7 +63,7 @@ class ProductCategoryController {
     }
   };
 
-  public deleteProductCategory = async (req: any, res: any) => {
+  public deleteProductCategory = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 
@@ -81,7 +82,7 @@ class ProductCategoryController {
     }
   }
 
-  public deleteProductCategoriesByProductId = async (req: any, res: any) => {
+  public deleteProductCategoriesByProductId = async (req: Request, res: Response) => {
     try {
       const { categoryId, productId } = req.params;
 
@@ -104,7 +105,7 @@ class ProductCategoryController {
     }
   };
 
-  public updateProductCategory = async (req: any, res: any) => {
+  public updateProductCategory = async (req: Request, res: Response) => {
     try {
       const { productId, categoryIds } = req.body;
 

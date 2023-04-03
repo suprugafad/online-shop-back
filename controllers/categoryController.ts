@@ -1,10 +1,11 @@
 import categoryDTO from "../dtos/categoryDTO";
 import { CategoryRepositoryImpl } from '../repositories/categoryRepositoryImpl';
+import {Request, Response} from "express";
 
 const categoryRepository = new CategoryRepositoryImpl();
 
 class CategoryController {
-  public getCategories = async (req: any, res: any) => {
+  public getCategories = async (req: Request, res: Response) => {
     try {
       const categories = await categoryRepository.getAll();
 
@@ -19,7 +20,7 @@ class CategoryController {
     }
   };
 
-  public getCategoryById = async (req: any, res: any) => {
+  public getCategoryById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 
@@ -36,7 +37,7 @@ class CategoryController {
     }
   };
 
-  public postCategory = async (req: any, res: any) => {
+  public postCategory = async (req: Request, res: Response) => {
     const { name } = req.body;
     try {
       const category = new categoryDTO(null, name);
@@ -55,7 +56,7 @@ class CategoryController {
     }
   };
 
-  public updateCategory = async (req: any, res: any) => {
+  public updateCategory = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const { name } = req.body;
@@ -77,7 +78,7 @@ class CategoryController {
     }
   };
 
-  public deleteCategory = async (req: any, res: any) => {
+  public deleteCategory = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
 
     try {

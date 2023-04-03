@@ -1,10 +1,12 @@
+import { Request, Response } from "express";
+
 const UserDTO = require('../dtos/userDTO')
 import { UserRepositoryImpl } from '../repositories/userRepositoryImpl';
 
 const userRepository = new UserRepositoryImpl();
 
 class userController {
-  public getUsers = async (req: any, res: any) => {
+  public getUsers = async (req: Request, res: Response) => {
     try {
       const users = userRepository.getAll();
 
@@ -19,7 +21,7 @@ class userController {
     }
   };
 
-  public getUserById = async (req: any, res: any) => {
+  public getUserById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 
@@ -36,7 +38,7 @@ class userController {
     }
   };
 
-  public updateUser = async (req: any, res: any) => {
+  public updateUser = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const { username, email } = req.body;
@@ -58,7 +60,7 @@ class userController {
     }
   };
 
-  public deleteUser = async (req: any, res: any) => {
+  public deleteUser = async (req: Request, res: Response) => {
     const id = parseInt(req.params.id);
     
     try {

@@ -1,11 +1,12 @@
 import { ProductRepositoryImpl } from '../repositories/productRepositoryImpl';
 import productDTO from "../dtos/productDTO";
 import ProductDTO from "../dtos/productDTO";
+import {Request, Response} from "express";
 
 const productRepository = new ProductRepositoryImpl();
 
 class productController {
-  public getProducts = async (req: any, res: any) => {
+  public getProducts = async (req: Request, res: Response) => {
     try {
       const products = await productRepository.getAll();
 
@@ -20,7 +21,7 @@ class productController {
     }
   };
 
-  public getProductById = async (req: any, res: any) => {
+  public getProductById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 
@@ -37,7 +38,7 @@ class productController {
     }
   };
 
-  public updateProduct = async (req: any, res: any) => {
+  public updateProduct = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
       const { title, description, price, image } = req.body;
@@ -59,7 +60,7 @@ class productController {
     }
   };
 
-  public postProduct = async (req: any, res: any) => {
+  public postProduct = async (req: Request, res: Response) => {
     try {
       const { title, description, price, image } = req.body;
 
@@ -80,7 +81,7 @@ class productController {
     }
   };
 
-  public deleteProduct  = async (req: any, res: any) => {
+  public deleteProduct  = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 
