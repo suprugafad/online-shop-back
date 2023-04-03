@@ -1,5 +1,5 @@
 import { query } from "../db";
-import { IRepository } from "./IRepository";
+import { IRepository } from "./interfaces/IRepository";
 import CartDTO from "../dtos/cartDTO";
 
 export class CartRepositoryImpl implements IRepository<CartDTO> {

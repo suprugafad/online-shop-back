@@ -1,6 +1,6 @@
 import { query } from '../db';
 import ProductDTO from '../dtos/productDTO';
-import { IRepository } from "./IRepository";
+import { IRepository } from "./interfaces/IRepository";
 
 export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   async create(product: ProductDTO): Promise<void> {

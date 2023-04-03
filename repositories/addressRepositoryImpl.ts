@@ -1,6 +1,6 @@
 import { query } from '../db';
 import AddressDTO from '../dtos/addressDTO';
-import { IAddressRepository } from "./IAddressRepository";
+import { IAddressRepository } from "./interfaces/IAddressRepository";
 
 export class AddressRepositoryImpl implements IAddressRepository {
   async create(address: AddressDTO): Promise<void> {

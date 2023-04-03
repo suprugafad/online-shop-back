@@ -1,6 +1,6 @@
 import CartItemDTO from "../dtos/cartItemDTO";
 import { query } from "../db";
-import { ICartItemRepository } from "./ICartItemRepository";
+import { ICartItemRepository } from "./interfaces/ICartItemRepository";
 
 export class CartItemRepositoryImpl implements ICartItemRepository {
   async create(cartItem: CartItemDTO): Promise<void> {

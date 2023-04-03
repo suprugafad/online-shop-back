@@ -1,5 +1,5 @@
 import {IRepository} from "./IRepository";
-import UserAddressDTO from "../dtos/userAddressDTO";
+import UserAddressDTO from "../../dtos/userAddressDTO";
 
 export interface IUserAddressRepository extends IRepository<UserAddressDTO>{
 

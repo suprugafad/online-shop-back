@@ -1,4 +1,4 @@
-import { IProductCategoryRepository } from "./IProductCategoryRepository";
+import { IProductCategoryRepository } from "./interfaces/IProductCategoryRepository";
 import { query } from '../db';
 import ProductCategoryDTO from '../dtos/productCategoryDTO';
 

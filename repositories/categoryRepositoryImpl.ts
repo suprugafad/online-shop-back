@@ -1,4 +1,4 @@
-import { IRepository } from "./IRepository";
+import { IRepository } from "./interfaces/IRepository";
 import { query } from '../db';
 import CategoryDTO from '../dtos/categoryDTO';
 

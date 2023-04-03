@@ -1,5 +1,5 @@
 import {IRepository} from "./IRepository";
-import ProductCategoryDTO from "../dtos/productCategoryDTO";
+import ProductCategoryDTO from "../../dtos/productCategoryDTO";
 
 export interface IProductCategoryRepository extends IRepository<ProductCategoryDTO>{
 

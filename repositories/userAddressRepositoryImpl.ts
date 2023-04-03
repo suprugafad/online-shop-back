@@ -1,5 +1,5 @@
 import UserAddressDTO from '../dtos/userAddressDTO';
-import { IUserAddressRepository } from "./IUserAddressRepository";
+import { IUserAddressRepository } from "./interfaces/IUserAddressRepository";
 import { query } from '../db';
 
 export class UserAddressRepositoryImpl implements IUserAddressRepository {

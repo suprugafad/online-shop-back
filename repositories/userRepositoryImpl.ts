@@ -1,6 +1,6 @@
 import { query } from '../db';
 import UserDTO from '../dtos/userDTO';
-import { IUserRepository } from './IUserRepository';
+import { IUserRepository } from './interfaces/IUserRepository';
 import userDTO from "../dtos/userDTO";
 const bcrypt = require('bcrypt');
 
