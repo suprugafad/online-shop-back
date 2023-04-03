@@ -10,7 +10,7 @@ export class CategoryRepositoryImpl implements IRepository<CategoryDTO> {
     try {
       await query(queryText, values);
     } catch (err) {
-      throw new Error('Unable to create v');
+      throw new Error('Unable to create category');
     }
   };
 

@@ -8,6 +8,10 @@ class userController {
     try {
       const users = userRepository.getAll();
 
+      if (!users) {
+        return res.status(404).json({message: 'Users not found'});
+      }
+
       res.status(200).json(users);
     } catch (err) {
       console.error(err);
@@ -59,6 +63,7 @@ class userController {
     
     try {
       const user = await userRepository.getByIdWithPassword(id);
+
       if (!user) {
         return res.status(404).json({ message: 'User not found.' });
       }
