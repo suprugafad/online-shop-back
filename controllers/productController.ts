@@ -1,5 +1,4 @@
 import { ProductRepositoryImpl } from '../repositories/productRepositoryImpl';
-import productDTO from "../dtos/productDTO";
 import ProductDTO from "../dtos/productDTO";
 import {Request, Response} from "express";
 
@@ -71,7 +70,7 @@ class productController {
         return;
       }
 
-      const product = new productDTO(null, title, description, price, image);
+      const product = new ProductDTO(null, title, description, price, image);
       await productRepository.create(product);
 
       res.status(201).send(`Product was added`);
