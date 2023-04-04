@@ -1,42 +1,45 @@
-import authController from './controllers/authController';
-import authMW from './middleware/authMW';
-import userController from './controllers/userController';
-import productController from './controllers/productController';
 import { Application } from "express";
-import cartItemController from "./controllers/cartItemController";
-const express = require('express');
+import userRouter from "./routers/userRouter";
+import addressRouter from "./routers/addressRouter"
+import userAddressRouter from "./routers/userAddressRouter";
+import authRouter from "./routers/authRouter";
+import cartItemRouter from "./routers/cartItemRouter";
+import categoryRouter from "./routers/categoryRouter";
+import paymentRouter from "./routers/paymentRouter";
+import productRouter from "./routers/productRouter";
+import productCategoryRouter from "./routers/productCategoryRouter";
+import config from "./config/config";
 
+const express = require('express');
 const dotenv = require('dotenv');
+
 dotenv.config();
 
-const PORT: string | number = process.env.PORT || 3000;
-
 const app: Application = express();
+
 app.use(express.json());
 
-app.post('/reg', authController.regUser);
-app.post('/login', authMW, authController.logUser);
+app.use("/api/users", userRouter);
+app.use("/api/addresses", addressRouter);
+app.use("/api/usersAddresses", userAddressRouter);
+app.use("/api/auth", authRouter);
+app.use("/api/cartItems", cartItemRouter);
+app.use("/api/categories", categoryRouter);
+app.use("/api/payments", paymentRouter);
+app.use("/api/products", productRouter);
+app.use("/api/productCategories", productCategoryRouter);
 
-app.get('/users', userController.getUsers);
-app.get('/users/:id', userController.getUserById);
-app.put('/users/:id', userController.updateUser);
-app.delete('/users/:id', userController.deleteUser);
-
-app.get('/products', productController.getProducts);
-app.post('/products', productController.postProduct);
-
-app.post('/newPassword', authMW, authController.changePassword);
-
-app.post('/cartItem', cartItemController.create);
-
-const start = (): void => {
+const start = async (): Promise<void> => {
     try {
-        app.listen(PORT, (): void => console.log(`server started on port ${PORT}`));
-    } catch (e) {
-        console.log(e);
+        await app.listen(config.port);
+        console.log(`Server running in ${config.env} mode on port ${config.port}`);
+    } catch (error) {
+        console.error(error);
+        process.exit(1);
     }
 };
 
-start();
-
-
+start().catch((error) => {
+    console.error("Error starting server:", error);
+    process.exit(1);
+});

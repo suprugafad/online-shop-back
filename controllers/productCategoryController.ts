@@ -139,3 +139,5 @@ class ProductCategoryController {
     }
   };
 }
+
+export default new ProductCategoryController();

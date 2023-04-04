@@ -5,7 +5,7 @@ import {Request, Response} from "express";
 const paymentRepository = new PaymentRepositoryImpl();
 
 class paymentController {
-  public getProducts = async (req: Request, res: Response) => {
+  public getPayments = async (req: Request, res: Response) => {
     try {
       const payments = await paymentRepository.getAll();
 
@@ -81,3 +81,5 @@ class paymentController {
 
   // skoro dobavlu eshe
 }
+
+export default new paymentController();

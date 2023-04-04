@@ -134,3 +134,5 @@ export class UserAddressController {
     }
   };
 }
+
+export default new UserAddressController();
