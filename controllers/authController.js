@@ -1,36 +1,48 @@
-const jwt = require('../jwt');
+const jwt = require('jsonwebtoken');
 const { secret } = require("../config/secrets");
-const user = require('../db/models/User')
-
-const generateAccessToken = (id) => {
-  const payload = {
-    iss: "shop.com",
-    sub: id,
-    exp: "24h"
-  }
-  return jwt.generateToken(payload, secret);
-}
+const pool = require("../db");
+const bcrypt = require("bcrypt");
+const saltRounds = 10;
 
 class authController {
-  auth (req, res) {
-    try {
-      const {username, password} = req.body;
+  regUser = async (req, res, next) => {
+    const { username, email, password } = req.body;
 
-      if (user.username !== username) {
-        return res.status(400).json({message: `User does not exist.`});
-      }
+    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
 
-      if (password !== user.password) {
-        return res.status(400).json({message: `Password is incorrect`});
-      }
-
-      const token = generateAccessToken(user.id);
-
-      return res.json({token});
-    } catch (e) {
-      res.status(400).json({message: 'Login error'});
+    if (user.rows.length > 0) {
+      return res.status(409).send('User with this email already exists');
     }
-  }
+
+    const hashedPassword = await bcrypt.hash(password, saltRounds);
+
+    try {
+      await pool.query('INSERT INTO users (username, email, password) VALUES ($1, $2, $3)', [username, email, hashedPassword]);
+      res.status(201).send('User was created successfully');
+    } catch (err) {
+      next(err);
+    }
+  };
+
+  logUser = async (req, res, next) => {
+    const { email, password } = req.body;
+
+    const user = await pool.query('SELECT * FROM users WHERE email = $1', [email]);
+
+    if (user.rows.length === 0) {
+      return res.status(401).send('Invalid credentials');
+    }
+
+    const validPassword = await bcrypt.compare(password, user.rows[0].password);
+
+    if (!validPassword) {
+      return res.status(401).send('Invalid credentials');
+    }
+
+    const token = jwt.sign({ id: user.rows[0].id, }, secret, { expiresIn: '1d' });
+
+    res.send(`Success! Your token:  ${token}`);
+  };
 }
 
 module.exports = new authController();
