@@ -135,7 +135,7 @@ export class PaymentRepositoryImpl implements IPaymentRepository {
     } catch (err) {
       throw new Error('Unable to get payments by user ID');
     }
-  }
+  };
 
   async getRevenueByMonth(year: number, month: number): Promise<number> {
     const queryText = 'SELECT SUM(amount) FROM payment WHERE EXTRACT(YEAR FROM transaction_date) = $1 AND EXTRACT(MONTH FROM transaction_date) = $2';

@@ -37,6 +37,120 @@ class paymentController {
     }
   };
 
+  public getPaymentByMethod = async (req: Request, res: Response) => {
+    try {
+      const method = req.params.method;
+
+      const payment = await paymentRepository.getByMethod(method);
+
+      if (!payment) {
+        return res.status(404).json({message: 'Payment by method not found'});
+      }
+
+      res.status(200).json(payment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting payment by method.' });
+    }
+  };
+
+  public getPaymentByOrderId = async (req: Request, res: Response) => {
+    try {
+      const orderId = parseInt(req.params.orderId);
+
+      const payment = await paymentRepository.getByOrderId(orderId);
+
+      if (!payment) {
+        return res.status(404).json({message: 'Payment by order ID not found'});
+      }
+
+      res.status(200).json(payment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting payment by order ID.' });
+    }
+  };
+
+  public getPaymentByStatus = async (req: Request, res: Response) => {
+    try {
+      const status = req.params.status;
+
+      const payment = await paymentRepository.getByStatus(status);
+
+      if (!payment) {
+        return res.status(404).json({message: 'Payment by status not found'});
+      }
+
+      res.status(200).json(payment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting payment by status.' });
+    }
+  };
+
+  public getPaymentByTransactionId = async (req: Request, res: Response) => {
+    try {
+      const transactionId = req.params.transactionId;
+
+      const payment = await paymentRepository.getByTransactionId(transactionId);
+
+      if (!payment) {
+        return res.status(404).json({message: 'Payment by transaction ID not found'});
+      }
+
+      res.status(200).json(payment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting payment by transaction ID.' });
+    }
+  };
+
+  public getPaymentByUserId = async (req: Request, res: Response) => {
+    try {
+      const userId = parseInt(req.params.userId);
+
+      const payment = await paymentRepository.getByUserId(userId);
+
+      if (!payment) {
+        return res.status(404).json({message: 'Payment by user ID not found'});
+      }
+
+      res.status(200).json(payment);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting payment by user ID.' });
+    }
+  };
+
+  public getRevenueByMonth = async (req: Request, res: Response) => {
+    try {
+      const year = parseInt(req.params.year);
+      const month = parseInt(req.params.month);
+
+      const revenue = await paymentRepository.getRevenueByMonth(year, month);
+
+      if (!revenue) {
+        return res.status(404).json({message: 'Revenue by month not found'});
+      }
+
+      res.status(200).json(revenue);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting revenue by month.' });
+    }
+  };
+
+  public getTotalAmount = async (req: Request, res: Response) => {
+    try {
+      const totalAmount = await paymentRepository.getTotalAmount();
+
+      res.status(200).json({ totalAmount });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting total amount.' });
+    }
+  };
+
   public updatePayment = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -79,7 +193,24 @@ class paymentController {
     }
   };
 
-  // skoro dobavlu eshe
+  public deletePayment = async (req: Request, res: Response) => {
+    try {
+      const id = parseInt(req.params.id);
+
+      const payment = await paymentRepository.getById(id);
+
+      if (!payment) {
+        return res.status(404).json({ message: 'Payment not found.' });
+      }
+
+      await paymentRepository.delete(id);
+
+      res.status(200).send(`Payment deleted with ID: ${id}`);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error deleting payment.' });
+    }
+  };
 }
 
 export default new paymentController();
