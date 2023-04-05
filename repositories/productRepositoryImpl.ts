@@ -71,7 +71,8 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     } catch (err) {
       throw new Error('Unable to update product');
     }
-  }
+  };
+
   async delete(id: number): Promise<void> {
     const queryText = 'DELETE FROM product WHERE id = $1';
     const values = [id];

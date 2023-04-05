@@ -37,6 +37,23 @@ class productController {
     }
   };
 
+  public getProductByTitle = async (req: Request, res: Response) => {
+    try {
+      const title = req.params.title;
+
+      const product = await productRepository.getByTitle(title);
+
+      if (!product) {
+        return res.status(404).json({message: 'Product not found by title'});
+      }
+
+      res.status(200).json(product);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting product by title.' });
+    }
+  };
+
   public updateProduct = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
