@@ -1,10 +1,10 @@
 import UserAddressDTO from '../dtos/userAddressDTO';
 import { UserAddressRepositoryImpl } from '../repositories/userAddressRepositoryImpl';
-import {Request, Response} from "express";
+import { Request, Response } from "express";
 
 const UserAddressRepository = new UserAddressRepositoryImpl();
 
-export class UserAddressController {
+class UserAddressController {
   public getAllUserAddress = async (req: Request, res: Response) => {
     try {
       const userAddresses = UserAddressRepository.getAll();
