@@ -22,6 +22,10 @@ class OrderDTO {
     this._addressId = addressID;
   }
 
+  get id(): number | null {
+    return this._id;
+  }
+
   get products(): DBProducts {
     return this._products;
   }
