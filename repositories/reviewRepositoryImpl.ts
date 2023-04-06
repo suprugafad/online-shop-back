@@ -44,22 +44,17 @@ export class ReviewRepositoryImpl implements IReviewRepository {
     return null;
   };
 
-  async getByUserId(id: number): Promise<ReviewDTO | null> {
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE user_id = $1;`;
-    const values = [id];
+  async filterByParameter(type: string, value: string | number): Promise<ReviewDTO[]> { // user_id, product_id
+    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE ${type} = $1;`;
+    const values = [value];
 
     try {
       const result = await query(queryText, values);
 
-      if (result.rows.length > 0) {
-        const {id, productId, userId, rating, comment} = result.rows[0];
-
-        return new ReviewDTO(id, productId, userId, rating, comment);
-      }
+      return result.rows.map(row => new ReviewDTO(row.id, row.productId, row.userId, row.rating, row.comment));
     } catch (err) {
-      throw new Error('Unable to get review');
+      throw new Error(`Unable to get review by ${type}`);
     }
-    return null;
   };
 
   async getByProductIdAndRating(productId: number, rating: number): Promise<ReviewDTO[]> {
@@ -73,24 +68,6 @@ export class ReviewRepositoryImpl implements IReviewRepository {
     } catch (err) {
       throw new Error('Unable to get review');
     }
-  };
-
-  async getByProductId(id: number): Promise<ReviewDTO | null> {
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE product_id = $1;`;
-    const values = [id];
-
-    try {
-      const result = await query(queryText, values);
-
-      if (result.rows.length > 0) {
-        const {id, productId, userId, rating, comment} = result.rows[0];
-
-        return new ReviewDTO(id, productId, userId, rating, comment);
-      }
-    } catch (err) {
-      throw new Error('Unable to get review');
-    }
-    return null;
   };
 
   async delete(id: number): Promise<void> {
@@ -139,7 +116,7 @@ export class ReviewRepositoryImpl implements IReviewRepository {
     }
   };
 
-  async getUserReview(userId: number, productId: number): Promise<ReviewDTO | null> {
+  async getByUserIdAndProductId(userId: number, productId: number): Promise<ReviewDTO | null> {
     const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE product_id = $1 AND user_id = $2;`;
     const values = [productId, userId];
 

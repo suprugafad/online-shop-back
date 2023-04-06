@@ -37,88 +37,20 @@ class paymentController {
     }
   };
 
-  public getPaymentByMethod = async (req: Request, res: Response) => {
+  public getPaymentsByFilter = async (req: Request, res: Response) => {
+    const { filterType, filterValue } = req.params;
+
     try {
-      const method = req.params.method;
+      const payments = await paymentRepository.filterByParameter(filterType, filterValue);
 
-      const payment = await paymentRepository.getByMethod(method);
-
-      if (!payment) {
-        return res.status(404).json({message: 'Payment by method not found'});
+      if (!payments) {
+        return res.status(404).json({ message: `Payments by ${filterType} not found.` });
       }
 
-      res.status(200).json(payment);
+      res.status(200).json(payments);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error getting payment by method.' });
-    }
-  };
-
-  public getPaymentByOrderId = async (req: Request, res: Response) => {
-    try {
-      const orderId = parseInt(req.params.orderId);
-
-      const payment = await paymentRepository.getByOrderId(orderId);
-
-      if (!payment) {
-        return res.status(404).json({message: 'Payment by order ID not found'});
-      }
-
-      res.status(200).json(payment);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error getting payment by order ID.' });
-    }
-  };
-
-  public getPaymentByStatus = async (req: Request, res: Response) => {
-    try {
-      const status = req.params.status;
-
-      const payment = await paymentRepository.getByStatus(status);
-
-      if (!payment) {
-        return res.status(404).json({message: 'Payment by status not found'});
-      }
-
-      res.status(200).json(payment);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error getting payment by status.' });
-    }
-  };
-
-  public getPaymentByTransactionId = async (req: Request, res: Response) => {
-    try {
-      const transactionId = req.params.transactionId;
-
-      const payment = await paymentRepository.getByTransactionId(transactionId);
-
-      if (!payment) {
-        return res.status(404).json({message: 'Payment by transaction ID not found'});
-      }
-
-      res.status(200).json(payment);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error getting payment by transaction ID.' });
-    }
-  };
-
-  public getPaymentByUserId = async (req: Request, res: Response) => {
-    try {
-      const userId = parseInt(req.params.userId);
-
-      const payment = await paymentRepository.getByUserId(userId);
-
-      if (!payment) {
-        return res.status(404).json({message: 'Payment by user ID not found'});
-      }
-
-      res.status(200).json(payment);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error getting payment by user ID.' });
+      res.status(500).json({ message: `Error getting payments by ${filterType}.` });
     }
   };
 
@@ -177,7 +109,7 @@ class paymentController {
     try {
       const { userId, orderId, transactionId, amount, transactionDate, method, status } = req.body;
 
-      const existingPayment = await paymentRepository.getByTransactionId(transactionId);
+      const existingPayment = await paymentRepository.filterByParameter('transactionId', transactionId);
 
       if (existingPayment) {
         return res.status(400).send(`Payment with transaction ID already exists.`);

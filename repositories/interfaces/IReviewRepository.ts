@@ -2,13 +2,11 @@ import { IRepository } from "./IRepository";
 import ReviewDTO from "../../dtos/reviewDTO";
 
 export interface IReviewRepository extends IRepository<ReviewDTO> {
-  getByUserId(id: number): Promise<ReviewDTO | null>;
-
-  getByProductId(id: number): Promise<ReviewDTO | null>;
+  filterByParameter(type: string, value: string | number): Promise<ReviewDTO[]>;
 
   getByProductIdAndRating(productId: number, rating: number): Promise<ReviewDTO[]>;
 
-  getUserReview(userId: number, productId: number): Promise<ReviewDTO | null>;
+  getByUserIdAndProductId(userId: number, productId: number): Promise<ReviewDTO | null>;
 
   getAverageRatingByProductId(productId: number): Promise<number>;
 

@@ -66,74 +66,16 @@ export class PaymentRepositoryImpl implements IPaymentRepository {
     }
   };
 
-  async getByMethod(method: string): Promise<PaymentDTO[]> {
-    const queryText = 'SELECT id, user_id, order_id, transaction_id, amount, transaction_date, method, status FROM payment WHERE method = $1';
-    const values = [method];
+  async filterByParameter(type: string, value: string | number): Promise<PaymentDTO[]> { // method, status, order_id, user_id, transaction_id
+    const queryText = `SELECT id, user_id, order_id, transaction_id, amount, transaction_date, method, status FROM payment WHERE ${type} = $1`;
+    const values = [value];
 
     try {
       const result = await query(queryText, values);
 
       return result.rows.map(row => new PaymentDTO(row.id, row.user_id, row.order_id, row.transaction_id, row.amount, row.transaction_date, row.method, row.status));
     } catch (err) {
-      throw new Error('Unable to get payments by method');
-    }
-  };
-
-  async getByOrderId(orderId: number): Promise<PaymentDTO[]> {
-    const queryText = 'SELECT id, user_id, order_id, transaction_id, amount, transaction_date, method, status FROM payment WHERE order_id = $1';
-    const values = [orderId];
-
-    try {
-      const result = await query(queryText, values);
-
-      return result.rows.map(row => new PaymentDTO(row.id, row.user_id, row.order_id, row.transaction_id, row.amount, row.transaction_date, row.method, row.status));
-    } catch (err) {
-      throw new Error('Unable to get payments by order ID');
-    }
-  };
-
-  async getByStatus(status: string): Promise<PaymentDTO[]> {
-    const queryText = 'SELECT id, user_id, order_id, transaction_id, amount, transaction_date, method, status FROM payment WHERE status = $1';
-    const values = [status];
-
-    try {
-      const result = await query(queryText, values);
-
-      return result.rows.map(row => new PaymentDTO(row.id, row.user_id, row.order_id, row.transaction_id, row.amount, row.transaction_date, row.method, row.status));
-    } catch (err) {
-      throw new Error('Unable to get payments by status');
-    }
-  };
-
-  async getByTransactionId(transactionId: string): Promise<PaymentDTO | null> {
-    const queryText = 'SELECT id, user_id, order_id, transaction_id, amount, transaction_date, method, status FROM payment WHERE transaction_id = $1';
-    const values = [transactionId];
-
-    try {
-      const result = await query(queryText, values);
-
-      if (result.rows.length > 0) {
-        const { id, user_id, order_id, transaction_id, amount, transaction_date, method, status } = result.rows[0];
-
-        return new PaymentDTO(id, user_id, order_id, transaction_id, amount, transaction_date, method, status);
-      }
-
-      return null;
-    } catch (err) {
-      throw new Error('Unable to get payment by transaction ID');
-    }
-  };
-
-  async getByUserId(userId: number): Promise<PaymentDTO[]> {
-    const queryText = 'SELECT id, user_id, order_id, transaction_id, amount, transaction_date, method, status FROM payment WHERE user_id = $1';
-    const values = [userId];
-
-    try {
-      const result = await query(queryText, values);
-
-      return result.rows.map(row => new PaymentDTO(row.id, row.user_id, row.order_id, row.transaction_id, row.amount, row.transaction_date, row.method, row.status));
-    } catch (err) {
-      throw new Error('Unable to get payments by user ID');
+      throw new Error('Unable to get payments by ${type}');
     }
   };
 

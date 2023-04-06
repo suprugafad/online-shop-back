@@ -26,17 +26,6 @@ export class AddressRepositoryImpl implements IAddressRepository {
     }
   };
 
-  async delete(id: number): Promise<void> {
-    const queryText = 'DELETE FROM address WHERE id = $1';
-    const values = [id];
-
-    try {
-      await query(queryText, values);
-    } catch (err) {
-      throw new Error('Unable to delete address');
-    }
-  };
-
   async getById(id: number): Promise<AddressDTO | null> {
     const queryText = `SELECT id, country, city, street, house, apartment FROM address WHERE id = $1;`;
     const values = [id];
@@ -55,44 +44,6 @@ export class AddressRepositoryImpl implements IAddressRepository {
     return null;
   };
 
-  async update(address: AddressDTO): Promise<void> {
-    const queryText = 'UPDATE address SET country = $1, city = $2, street = $3, house = $4, apartment = $5 WHERE id = $6';
-    const values = [address.country, address.city, address.street, address.house, address.apartment, address.id];
-
-    try {
-      await query(queryText, values);
-    } catch (err) {
-      throw new Error('Unable to update address');
-    }
-  };
-
-  async getByCountry(country: string): Promise<AddressDTO[]> {
-    const queryText = 'SELECT id, country, city, street, house, apartment FROM address WHERE country = $1';
-    const values = [country];
-
-    try {
-      const result = await query(queryText, values);
-
-      return result.rows.map(row => new AddressDTO(row.id, row.country, row.city, row.street, row.house, row.apartment));
-    } catch (err) {
-      throw new Error('Unable to get addresses by country');
-    }
-  };
-
-  async getByCity(city: string): Promise<AddressDTO[]> {
-    const queryText = 'SELECT id, country, city, street, house, apartment FROM address WHERE city = $1';
-    const values = [city];
-
-    try {
-      const result = await query(queryText, values);
-
-      return result.rows.map(row => new AddressDTO(row.id, row.country, row.city, row.street, row.house, row.apartment));
-    } catch (err) {
-      throw new Error('Unable to get addresses by city');
-    }
-  };
-
-  // ne uverena chto on nuzhen
   async getByOrderId(orderId: number): Promise<AddressDTO | null> {
     const queryText = `SELECT id, country, city, street, house, apartment FROM address WHERE id IN (SELECT address_id FROM order WHERE id = $1);`;
     const values = [orderId];
@@ -109,6 +60,41 @@ export class AddressRepositoryImpl implements IAddressRepository {
       throw new Error('Unable to get address by order ID');
     }
     return null;
+  };
+
+  async filterByParameter(type: string, value: string | number): Promise<AddressDTO[]> {   // city, country
+    const queryText = `SELECT id, country, city, street, house, apartment FROM address WHERE ${type} = $1`;
+    const values = [value];
+
+    try {
+      const result = await query(queryText, values);
+
+      return result.rows.map(row => new AddressDTO(row.id, row.country, row.city, row.street, row.house, row.apartment));
+    } catch (err) {
+      throw new Error(`Unable to get addresses by ${type}`);
+    }
+  };
+
+  async update(address: AddressDTO): Promise<void> {
+    const queryText = 'UPDATE address SET country = $1, city = $2, street = $3, house = $4, apartment = $5 WHERE id = $6';
+    const values = [address.country, address.city, address.street, address.house, address.apartment, address.id];
+
+    try {
+      await query(queryText, values);
+    } catch (err) {
+      throw new Error('Unable to update address');
+    }
+  };
+
+  async delete(id: number): Promise<void> {
+    const queryText = 'DELETE FROM address WHERE id = $1';
+    const values = [id];
+
+    try {
+      await query(queryText, values);
+    } catch (err) {
+      throw new Error('Unable to delete address');
+    }
   };
 
   async isExist(address: AddressDTO): Promise<boolean> {

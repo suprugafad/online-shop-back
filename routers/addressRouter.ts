@@ -8,8 +8,7 @@ router.get('/', addressController.getAddresses);
 router.delete('/:id', addressController.deleteAddress);
 router.put('/:id', addressController.updateAddress);
 router.get('/:id', addressController.getAddressById);
-router.get('/country/:country', addressController.getAddressesByCountry);
-router.get('/city/:city', addressController.getAddressesByCity);
+router.get('/:filterType/:filterValue', addressController.getAddressesByFilter);
 router.get('/order/:orderId', addressController.getAddressByOrderId);
 
 export default router;

@@ -56,7 +56,7 @@ class CartItemController {
     }
   };
 
-  public getByIdCartItem = async (req: Request, res: Response) => {
+  public getCartItemById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
 

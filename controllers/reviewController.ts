@@ -37,37 +37,20 @@ class reviewController {
     }
   };
 
-  public getReviewsByUserId = async (req: Request, res: Response) => {
-    try {
-      const userId = parseInt(req.params.userId);
+  public getReviewsByFilter = async (req: Request, res: Response) => {  // user_id, product_id
+    const { filterType, filterValue } = req.params;
 
-      const reviews = await reviewRepository.getByUserId(userId);
+    try {
+      const reviews = await reviewRepository.filterByParameter(filterType, filterValue);
 
       if (!reviews) {
-        return res.status(404).json({message: 'Reviews not found by user ID'});
+        return res.status(404).json({message: `Reviews not found by ${filterType}`});
       }
 
       res.status(200).json(reviews);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error getting reviews by user ID.' });
-    }
-  };
-
-  public getReviewsByProductId = async (req: Request, res: Response) => {
-    try {
-      const productId = parseInt(req.params.productId);
-
-      const reviews = await reviewRepository.getByProductId(productId);
-
-      if (!reviews) {
-        return res.status(404).json({message: 'Reviews not found by product ID'});
-      }
-
-      res.status(200).json(reviews);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error getting reviews by product ID.' });
+      res.status(500).json({ message: `Error getting reviews by ${filterType}` });
     }
   };
 
@@ -76,7 +59,7 @@ class reviewController {
       const productId = parseInt(req.params.productId);
       const userId = parseInt(req.params.userId);
 
-      const reviews = await reviewRepository.getUserReview(productId, userId);
+      const reviews = await reviewRepository.getByUserIdAndProductId(productId, userId);
 
       if (!reviews) {
         return res.status(404).json({message: 'Reviews not found by product ID and user ID'});
@@ -133,7 +116,7 @@ class reviewController {
     try {
       const { productId, userId, rating, comment } = req.body;
 
-      const existingReview = await reviewRepository.getUserReview(userId, productId);
+      const existingReview = await reviewRepository.getByUserIdAndProductId(userId, productId);
 
       if (existingReview) {
         res.status(400).send(`Review with this user ID and product ID already exists.`);
@@ -173,7 +156,7 @@ class reviewController {
     try {
       const productId = parseInt(req.params.productId);
 
-      const review = await reviewRepository.getByProductId(productId);
+      const review = await reviewRepository.filterByParameter('productId', productId);
 
       if (!review) {
         return res.status(404).json({ message: 'Review not found.' });
@@ -192,7 +175,7 @@ class reviewController {
     try {
       const productId = parseInt(req.params.id);
 
-      const existingReviews = await reviewRepository.getByProductId(productId);
+      const existingReviews = await reviewRepository.filterByParameter('productId', productId);
 
       if (!existingReviews) {
         return res.status(404).json({ message: 'Review not found' });

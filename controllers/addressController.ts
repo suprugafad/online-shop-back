@@ -94,37 +94,20 @@ class AddressController {
     }
   };
 
-  public getAddressesByCountry = async (req: Request, res: Response) => {
-    const country = req.params.country;
+  public getAddressesByFilter = async (req: Request, res: Response) => {   // city, country
+    const { filterType, filterValue } = req.params;
 
     try {
-      const addresses = await addressRepository.getByCountry(country);
+      const addresses = await addressRepository.filterByParameter(filterType, filterValue);
 
       if (!addresses) {
-        return res.status(404).json({ message: 'Addresses by country not found.' });
+        return res.status(404).json({ message: `Addresses by ${filterType} not found.` });
       }
 
       res.status(200).json(addresses);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error getting addresses by country.' });
-    }
-  };
-
-  public getAddressesByCity = async (req: Request, res: Response) => {
-    const city = req.params.city;
-
-    try {
-      const addresses = await addressRepository.getByCity(city);
-
-      if (!addresses) {
-        return res.status(404).json({ message: 'Addresses by city not found.' });
-      }
-
-      res.status(200).json(addresses);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: 'Error getting addresses by city.' });
+      res.status(500).json({ message: `Error getting addresses by ${filterType}.` });
     }
   };
 
