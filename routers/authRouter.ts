@@ -1,10 +1,17 @@
-import express from 'express';
-import AuthController from '../controllers/authController';
+const express = require('express');
+import authController from '../controllers/authController';
+import authMiddleware from "../middleware/authMW";
+const cors = require("cors");
 
 const router = express.Router();
 
-router.post('/register', AuthController.regUser);
-router.post('/login', AuthController.logUser);
-router.post('/change_password', AuthController.changePassword);
+router.use(cors({
+  origin: 'http://localhost:3000',
+  credentials: true,
+}));
+
+router.post('/register', authController.regUser);
+router.post('/login', authMiddleware, authController.logUser);
+router.post('/change_password', authController.changePassword);
 
 export default router;

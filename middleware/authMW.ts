@@ -1,6 +1,7 @@
 import { secret } from '../config/secrets';
 import { UserRepositoryImpl } from '../repositories/userRepositoryImpl';
 
+const cookieParser = require('cookie-parser');
 const jwt = require('jsonwebtoken')
 const userRepository = new UserRepositoryImpl();
 
@@ -28,4 +29,7 @@ const authMiddleware = async (req: any, res: any, next: any) => {
   }
 }
 
-export default authMiddleware;
+export default [
+  cookieParser(),
+  authMiddleware
+];

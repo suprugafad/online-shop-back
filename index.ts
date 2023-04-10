@@ -10,14 +10,21 @@ import productRouter from "./routers/productRouter";
 import productCategoryRouter from "./routers/productCategoryRouter";
 import config from "./config/config";
 
+const cors = require("cors");
 const express = require('express');
+const cookieParser = require('cookie-parser');
 const dotenv = require('dotenv');
 
 dotenv.config();
 
 const app: Application = express();
 
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+}));
 app.use(express.json());
+app.use(cookieParser());
 
 app.use("/api/users", userRouter);
 app.use("/api/addresses", addressRouter);

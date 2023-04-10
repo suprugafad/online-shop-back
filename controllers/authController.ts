@@ -44,7 +44,7 @@ class AuthController {
       }
 
       const token = jwt.sign({ id: user.userDTO.id }, secret, { expiresIn: '1d' });
-      res.cookie('token', token, { httpOnly: true });
+      res.cookie('token', token, { httpOnly: true, sameSite: 'none' });
 
       res.status(200).send({
         message: 'User logged in',
@@ -56,7 +56,7 @@ class AuthController {
       });
     } catch (err) {
       console.error(err);
-      res.status(500).send('Error creating user');
+      res.status(500).send('Error login user');
     }
   };
 
