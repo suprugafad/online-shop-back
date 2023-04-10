@@ -71,22 +71,19 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
       throw new Error('Unable to get product_category by product_id and category_id');
     }
     return null;
-  }
+  };
 
-  async getProductsByCategoryId(categoryId: number): Promise<ProductCategoryDTO[] | null> {
-    const queryText = `SELECT id, product_id, category_id FROM product_category WHERE category_id = $1`;
-    const values = [categoryId];
+  async filterByParameter(type: string, value: string | number): Promise<ProductCategoryDTO[]> { //product_id, category_id
+    const queryText = `SELECT id, product_id, category_id FROM product_category WHERE ${type} = $1`;
+    const values = [value];
 
     try {
       const result = await query(queryText, values);
 
-      if (result.rows.length > 0) {
-        return result.rows.map(row => new ProductCategoryDTO(row.id, row.userId, row.addressId));
-      }
+      return result.rows.map(row => new ProductCategoryDTO(row.id, row.userId, row.addressId));
     } catch (err) {
-      throw new Error('Unable to get products by category id');
+      throw new Error(`Unable to get products by ${type}`);
     }
-    return null;
   };
 
   async update(productCategory: ProductCategoryDTO): Promise<void> {

@@ -1,4 +1,4 @@
-import express from "express";
+const express = require('express');
 import paymentController from "../controllers/paymentController";
 
 const router = express.Router();

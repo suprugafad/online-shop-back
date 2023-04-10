@@ -80,7 +80,7 @@ class reviewController {
       const reviews = await reviewRepository.getByProductIdAndRating(productId, rating);
 
       if (!reviews) {
-        return res.status(404).json({message: 'Reviews not found by product ID and rating'});
+        return res.status(404).json({ message: 'Reviews not found by product ID and rating' });
       }
 
       res.status(200).json(reviews);

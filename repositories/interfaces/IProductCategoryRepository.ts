@@ -3,7 +3,7 @@ import ProductCategoryDTO from "../../dtos/productCategoryDTO";
 
 export interface IProductCategoryRepository extends IRepository<ProductCategoryDTO>{
 
-  getProductsByCategoryId(categoryId: number): Promise<ProductCategoryDTO[] | null>;
+  filterByParameter(type: string, value: string | number): Promise<ProductCategoryDTO[]>;
 
   deleteByProductId(productId: number): Promise<void>;
 

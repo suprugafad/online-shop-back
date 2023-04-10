@@ -29,7 +29,7 @@ class ProductCategoryController {
     try {
       const categoryId = parseInt(req.params.categoryId);
 
-      const products = await productCategoryRepository.getProductsByCategoryId(categoryId);
+      const products = await productCategoryRepository.filterByParameter('categoryId', categoryId);
 
       if (!products) {
         return res.status(404).json({message: 'Product_categories by id not found'});

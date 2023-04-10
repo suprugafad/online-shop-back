@@ -1,10 +1,10 @@
-import express from 'express';
+const express = require('express');
 import productCategoryController from '../controllers/productCategoryController';
 
 const router = express.Router();
 
 router.get('/', productCategoryController.getAllCategoryProduct);
-router.get('/:categoryId/products', productCategoryController.getProductsByCategoryId);
+router.get('/:filterType/:filterValue', productCategoryController.getProductsByCategoryId);
 router.post('/', productCategoryController.createProductCategory);
 router.delete('/:id', productCategoryController.deleteProductCategory);
 router.delete('/:productId/:categoryId', productCategoryController.deleteProductCategoriesByProductId);

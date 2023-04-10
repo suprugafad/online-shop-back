@@ -1,16 +1,15 @@
 import { query } from '../db';
 import UserDTO from '../dtos/userDTO';
 import { IUserRepository } from './interfaces/IUserRepository';
-import userDTO from "../dtos/userDTO";
 const bcrypt = require('bcrypt');
 
 const saltRounds = 10;
 
 export class UserRepositoryImpl implements IUserRepository {
-  async create(user: userDTO, password: string): Promise<void> {
+  async create(user: UserDTO, password: string): Promise<void> {
     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    const queryText = `INSERT INTO users (username, email, password) VALUES ($1, $2, $3)`;
+    const queryText = `INSERT INTO "user" (username, email, password) VALUES ($1, $2, $3)`;
     const values = [user.username, user.email, hashedPassword];
 
     try {
@@ -21,25 +20,25 @@ export class UserRepositoryImpl implements IUserRepository {
   };
 
   async getUserByEmail(email: string): Promise<{ password: any; userDTO: UserDTO } | null> {
-    const queryText = `SELECT id, username, email, password FROM users WHERE email = $1;`;
+    const queryText = `SELECT id, username, email, password FROM "user" WHERE email = $1;`;
     const values = [email];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, username, email, password} = result.rows[0];
+        const { id, username, email, password } = result.rows[0];
 
-        return {userDTO: new UserDTO(id, username, email), password: password};
+        return { userDTO: new UserDTO(id, username, email), password: password };
       }
     } catch (err) {
-      throw new Error('Unable to get user');
+      throw new Error('Unable to get user by email');
     }
     return null;
   };
 
   async getByIdWithPassword(id: number): Promise<{ password: any; userDTO: UserDTO } | null> {
-    const queryText = `SELECT id, username, email, password FROM users WHERE id = $1;`;
+    const queryText = `SELECT id, username, email, password FROM "user" WHERE id = $1;`;
     const values = [id];
 
     try {
@@ -59,7 +58,7 @@ export class UserRepositoryImpl implements IUserRepository {
   async updatePassword(id: number, newPassword: string): Promise<void> {
       const newHashedPassword = await bcrypt.hash(newPassword, saltRounds);
 
-      const queryText = `UPDATE user SET password = $1 WHERE id = $2;`;
+      const queryText = `UPDATE "user" SET password = $1 WHERE id = $2;`;
       const values = [newHashedPassword, id];
 
       try {
@@ -70,7 +69,7 @@ export class UserRepositoryImpl implements IUserRepository {
   };
 
   async getAll(): Promise<UserDTO[]> {
-    const queryText = `SELECT id, username, email FROM users ORDER BY id ASC`;
+    const queryText = `SELECT id, username, email FROM "user" ORDER BY id ASC`;
 
     try {
       const result = await query(queryText);
@@ -82,7 +81,7 @@ export class UserRepositoryImpl implements IUserRepository {
   };
 
   async update(user: UserDTO): Promise<void> {
-    const queryText = 'UPDATE user SET username = $1, email = $2 WHERE id = $3';
+    const queryText = 'UPDATE "user" SET username = $1, email = $2 WHERE id = $3';
     const values = [user.username, user.email, user.id];
 
     try {
@@ -93,7 +92,7 @@ export class UserRepositoryImpl implements IUserRepository {
   };
 
   async delete(id: number): Promise<void> {
-    const queryText = 'DELETE FROM user WHERE id = $1';
+    const queryText = 'DELETE FROM "user" WHERE id = $1';
     const values = [id];
 
     try {
@@ -104,7 +103,7 @@ export class UserRepositoryImpl implements IUserRepository {
   };
 
   async getById(id: number): Promise<UserDTO | null> {
-    const queryText = `SELECT id, username, email, password FROM users WHERE id = $1;`;
+    const queryText = `SELECT id, username, email, password FROM "user" WHERE id = $1;`;
     const values = [id];
 
     try {

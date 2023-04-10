@@ -8,7 +8,7 @@ const userRepository = new UserRepositoryImpl();
 class userController {
   public getUsers = async (req: Request, res: Response) => {
     try {
-      const users = userRepository.getAll();
+      const users = await userRepository.getAll();
 
       if (!users) {
         return res.status(404).json({message: 'Users not found'});
