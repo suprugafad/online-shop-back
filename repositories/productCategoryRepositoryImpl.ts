@@ -20,12 +20,13 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     try {
       const result = await query(queryText);
 
-      return result.rows.map(row => new ProductCategoryDTO(row.id, row.productId, row.categoryId));
+      return result.rows.map(row => new ProductCategoryDTO(row.productId, row.categoryId));
     } catch (err) {
       throw new Error('Unable to get all product_categories');
     }
   };
 
+  //nado ispravit
   async delete(id: number): Promise<void> {
     const queryText = 'DELETE FROM product_category WHERE id = $1';
     const values = [id];
@@ -38,16 +39,16 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
   };
 
   async getById(id: number): Promise<ProductCategoryDTO | null> {
-    const queryText = `SELECT id, product_id, category_id name FROM product_category WHERE id = $1;`;
+    const queryText = `SELECT product_id, category_id name FROM product_category WHERE id = $1;`;
     const values = [id];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, productId, categoryId} = result.rows[0];
+        const {productId, categoryId} = result.rows[0];
 
-        return new ProductCategoryDTO(id, productId, categoryId);
+        return new ProductCategoryDTO(productId, categoryId);
       }
     } catch (err) {
       throw new Error('Unable to get product_category');
@@ -56,16 +57,16 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
   };
 
   async getByProductIdAndCategoryId(productId: number, categoryId: number): Promise<ProductCategoryDTO | null> {
-    const queryText = `SELECT id, product_id, category_id name FROM product_category WHERE product_id = $1 AND category_id = $2;`;
+    const queryText = `SELECT product_id, category_id name FROM product_category WHERE product_id = $1 AND category_id = $2;`;
     const values = [productId, categoryId];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, productId, categoryId} = result.rows[0];
+        const {productId, categoryId} = result.rows[0];
 
-        return new ProductCategoryDTO(id, productId, categoryId);
+        return new ProductCategoryDTO(productId, categoryId);
       }
     } catch (err) {
       throw new Error('Unable to get product_category by product_id and category_id');
@@ -73,22 +74,23 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     return null;
   };
 
+//nado ispravit
   async filterByParameter(type: string, value: string | number): Promise<ProductCategoryDTO[]> { //product_id, category_id
-    const queryText = `SELECT id, product_id, category_id FROM product_category WHERE ${type} = $1`;
+    const queryText = `SELECT product_id, category_id FROM product_category WHERE ${type} = $1`;
     const values = [value];
 
     try {
       const result = await query(queryText, values);
 
-      return result.rows.map(row => new ProductCategoryDTO(row.id, row.userId, row.addressId));
+      return result.rows.map(row => new ProductCategoryDTO(row.productId, row.categoryId));
     } catch (err) {
       throw new Error(`Unable to get products by ${type}`);
     }
   };
-
+//nado ispravit
   async update(productCategory: ProductCategoryDTO): Promise<void> {
     const queryText = 'UPDATE product_category SET product_id = $1, category_id = $2 WHERE id = $3';
-    const values = [productCategory.productId, productCategory.categoryId, productCategory.id];
+    const values = [productCategory.productId, productCategory.categoryId];
 
     try {
       await query(queryText, values);
@@ -108,5 +110,3 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     }
   };
 }
-
-export default ProductCategoryRepositoryImpl;

@@ -1,16 +1,10 @@
-class CategoryDTO {
-  private readonly _id: number | null;
+class ProductCategoryDTO {
   private _categoryId: number;
   private _productId: number;
 
-  constructor(id: number | null, productId: number, categoryId: number) {
-    this._id = id;
+  constructor(productId: number, categoryId: number) {
     this._productId = productId
     this._categoryId = categoryId;
-  }
-
-  get id(): number | null {
-    return this._id;
   }
 
   get categoryId(): number {
@@ -30,4 +24,4 @@ class CategoryDTO {
   }
 }
 
-export default CategoryDTO;
+export default ProductCategoryDTO;

@@ -3,14 +3,18 @@ class ProductDTO {
   private _title: string;
   private _description: string;
   private _price: number;
-  private _image: string;
+  private _amount: number
+  private _mainImage: string | null;
+  private _additionalImages: string[] | null;
 
-  constructor(id: number | null, title: string, description: string, price: number, image: string) {
+  constructor(id: number | null, title: string, description: string, price: number, amount: number, mainImage: string| null, additionalImages: string[] | null) {
     this._id = id;
     this._title = title;
     this._description = description;
     this._price = price;
-    this._image = image;
+    this._amount = amount;
+    this._mainImage = mainImage;
+    this._additionalImages = additionalImages;
   }
 
   get id(): number | null {
@@ -41,12 +45,28 @@ class ProductDTO {
     this._price = price;
   }
 
-  get image(): string {
-    return this._image;
+  get amount(): number {
+    return this._amount;
   }
 
-  set image(image: string) {
-    this._image = image;
+  set amount(amount: number) {
+    this._amount = amount;
+  }
+
+  get mainImage(): string | null {
+    return this._mainImage;
+  }
+
+  set mainImage(mainImage: string | null) {
+    this._mainImage = mainImage;
+  }
+
+  get additionalImages(): string[] | null {
+    return this._additionalImages;
+  }
+
+  set additionalImages(additionalImages: string[] | null) {
+    this._additionalImages = additionalImages;
   }
 }
 

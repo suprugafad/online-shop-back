@@ -1,6 +1,8 @@
 import { ProductRepositoryImpl } from '../repositories/productRepositoryImpl';
 import ProductDTO from "../dtos/productDTO";
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+import * as fs from "fs";
+const path = require("path");
 
 const productRepository = new ProductRepositoryImpl();
 
@@ -57,7 +59,7 @@ class productController {
   public updateProduct = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { title, description, price, image } = req.body;
+      const { title, description, price, amount, mainImage, additionalImages } = req.body;
 
       const product = await productRepository.getById(id);
 
@@ -65,7 +67,7 @@ class productController {
         return res.status(404).json({message: 'Product not found.'});
       }
 
-      const newProduct = new ProductDTO(product.id, title || product.title, description || product.description, price || product.price, image || product.image );
+      const newProduct = new ProductDTO(product.id, title || product.title, description || product.description, price || product.price, amount || product.amount, mainImage || product.mainImage, additionalImages || product.additionalImages);
 
       await productRepository.update(newProduct);
 
@@ -78,7 +80,11 @@ class productController {
 
   public postProduct = async (req: Request, res: Response) => {
     try {
-      const { title, description, price, image } = req.body;
+      const { title, description, price, amount } = req.body;
+
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+      const mainImage: string | null = files && files.mainImage ? files.mainImage[0].filename : null;
+      const additionalImages = files && files.additionalImages ? files.additionalImages.map(image => image.filename) : null;
 
       const existingProduct = await productRepository.getByTitle(title);
 
@@ -87,24 +93,43 @@ class productController {
         return;
       }
 
-      const product = new ProductDTO(null, title, description, price, image);
-      await productRepository.create(product);
+      const product = new ProductDTO(null, title, description, price, amount, mainImage, additionalImages);
 
-      res.status(201).send(`Product was added`);
+      await productRepository.create(product);
+      const postedProduct: ProductDTO | null = await productRepository.getByTitle(title);
+
+      res.status(201).json({ message: `Product was added`, id: postedProduct?.id });
     } catch (err) {
       console.error(err);
       res.status(500).send('Error creating product');
     }
   };
 
-  public deleteProduct  = async (req: Request, res: Response) => {
+  public deleteProduct = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
+      const product = await productRepository.getById(id);
 
-      const user = await productRepository.getById(id);
-
-      if (!user) {
+      if (!product) {
         return res.status(404).json({ message: 'Product not found.' });
+      }
+
+      const mainImage = product.mainImage;
+      if (mainImage) {
+        const mainImagePath = path.join(__dirname, "../assets/images/products", product.title, mainImage);
+        fs.unlinkSync(mainImagePath);
+      }
+
+      const additionalImages = product.additionalImages;
+      if (additionalImages) {
+        additionalImages.forEach(image => {
+          const imagePath = path.join(__dirname, "../assets/images/products", product.title, image);
+          fs.unlinkSync(imagePath);
+        });
+      }
+
+      if (fs.existsSync(path.join(__dirname, "../assets/images/products", product.title))) {
+        fs.rmdirSync(path.join(__dirname, "../assets/images/products", product.title));
       }
 
       await productRepository.delete(id);

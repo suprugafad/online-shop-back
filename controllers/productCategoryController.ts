@@ -25,20 +25,19 @@ class ProductCategoryController {
     }
   };
 
-  public getProductsByCategoryId = async (req: Request, res: Response) => {
+  public getByFilter = async (req: Request, res: Response) => {
+    const { filterType, filterValue } = req.params;
     try {
-      const categoryId = parseInt(req.params.categoryId);
-
-      const products = await productCategoryRepository.filterByParameter('categoryId', categoryId);
+      const products = await productCategoryRepository.filterByParameter(filterType, filterValue);
 
       if (!products) {
-        return res.status(404).json({message: 'Product_categories by id not found'});
+        return res.status(404).json({message: `Product_categories by ${filterType} not found`});
       }
 
       res.status(200).json(products);
     } catch (err) {
       console.error(err);
-      res.status(500).json({ message: 'Error getting products by category ID.' });
+      res.status(500).json({ message: `Error getting products by ${filterType}` });
     }
   };
 
@@ -52,7 +51,7 @@ class ProductCategoryController {
         return res.status(400).json({ message: 'Product is already associated with the category' });
       }
 
-      const productCategory = new ProductCategoryDTO(null, productId, categoryId);
+      const productCategory = new ProductCategoryDTO(productId, categoryId);
 
       await productCategoryRepository.create(productCategory);
 
@@ -82,6 +81,7 @@ class ProductCategoryController {
     }
   }
 
+//nado ispravit
   public deleteProductCategoriesByProductId = async (req: Request, res: Response) => {
     try {
       const { categoryId, productId } = req.params;
@@ -92,11 +92,11 @@ class ProductCategoryController {
         return res.status(404).json({ message: 'Product category not found' });
       }
 
-      const id = productCategory.id;
+      // const id = productCategory.id;
 
-      if (id) {
-        await productCategoryRepository.delete(id);
-      }
+      // if (id) {
+      //   await productCategoryRepository.delete(id);
+      // }
 
       res.status(200).send(`Product was removed from the category`);
     } catch (err) {
@@ -128,7 +128,7 @@ class ProductCategoryController {
       await productCategoryRepository.deleteByProductId(productId);
 
       await Promise.all(validCategoryIds.map(async (categoryId: number) => {
-        const productCategory = new ProductCategoryDTO(null, productId, categoryId);
+        const productCategory = new ProductCategoryDTO(productId, categoryId);
         await productCategoryRepository.create(productCategory);
       }));
 
