@@ -14,8 +14,7 @@ router.use(cors({
 router.get('/', productCategoryController.getAllCategoryProduct);
 router.get('/:filterType/:filterValue', productCategoryController.getByFilter);
 router.post('/', productCategoryController.createProductCategory);
-router.delete('/:id', productCategoryController.deleteProductCategory);
-router.delete('/:productId/:categoryId', productCategoryController.deleteProductCategoriesByProductId);
+router.delete('/:productId/:categoryId', productCategoryController.deleteByProductIdAndCategoryId);
 router.put('/:productId', productCategoryController.updateProductCategory);
 
 export default router;

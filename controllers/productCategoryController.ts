@@ -62,48 +62,22 @@ class ProductCategoryController {
     }
   };
 
-  public deleteProductCategory = async (req: Request, res: Response) => {
+  public deleteByProductIdAndCategoryId = async  (req: Request, res: Response) => {
     try {
-      const id = parseInt(req.params.id);
-
-      const userAddress = await productCategoryRepository.getById(id);
-
-      if (!userAddress) {
-        return res.status(404).json({message: 'Product_category not found'});
-      }
-
-      await productCategoryRepository.delete(id);
-
-      res.status(200).send(`Product_category deleted with ID: ${id}`);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({message: 'Error deleting product_category'});
-    }
-  }
-
-//nado ispravit
-  public deleteProductCategoriesByProductId = async (req: Request, res: Response) => {
-    try {
-      const { categoryId, productId } = req.params;
-
+      const {categoryId, productId} = req.params;
       const productCategory = await productCategoryRepository.getByProductIdAndCategoryId(parseInt(productId), parseInt(categoryId));
 
       if (!productCategory) {
-        return res.status(404).json({ message: 'Product category not found' });
+        return res.status(404).json({message: 'Product category not found'});
       }
 
-      // const id = productCategory.id;
-
-      // if (id) {
-      //   await productCategoryRepository.delete(id);
-      // }
-
+      await productCategoryRepository.deleteByProductIdAndCategoryId(parseInt(productId), parseInt(categoryId));
       res.status(200).send(`Product was removed from the category`);
     } catch (err) {
       console.error(err);
       res.status(500).send('Error removing product from category');
     }
-  };
+  }
 
   public updateProductCategory = async (req: Request, res: Response) => {
     try {

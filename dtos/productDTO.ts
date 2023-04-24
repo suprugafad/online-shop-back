@@ -7,7 +7,7 @@ class ProductDTO {
   private _mainImage: string | null;
   private _additionalImages: string[] | null;
 
-  constructor(id: number | null, title: string, description: string, price: number, amount: number, mainImage: string| null, additionalImages: string[] | null) {
+  constructor(id: number | null, title: string, description: string, price: number, amount: number, mainImage: string | null, additionalImages: string[] | null) {
     this._id = id;
     this._title = title;
     this._description = description;

@@ -7,5 +7,6 @@ export interface IProductCategoryRepository extends IRepository<ProductCategoryD
 
   deleteByProductId(productId: number): Promise<void>;
 
-  getByProductIdAndCategoryId(productId: number, categoryId: number): Promise<ProductCategoryDTO | null>
+  getByProductIdAndCategoryId(productId: number, categoryId: number): Promise<ProductCategoryDTO | null>;
+  deleteByProductIdAndCategoryId(productId: number, categoryId: number): Promise<void>;
 }

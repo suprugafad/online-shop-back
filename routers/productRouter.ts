@@ -12,12 +12,16 @@ router.use(cors({
 }));
 
 router.get('/', productController.getProducts);
+router.get('/byFilterPaginated', productController.getProductsByFilterWithPagination);
+router.get('/paginated', productController.getPaginated);
+// router.get('/paginatedWithFilers', productController.getPaginatedWithFilters);
+router.get('/manufacturers', productController.getAllManufacturers);
+router.get('/:id', productController.getProductById);
 router.post(
   "/",
   upload.fields([{ name: 'mainImage', maxCount: 1 }, { name: 'additionalImages', maxCount: 10 }]),
   productController.postProduct
 );
-router.get('/:id', productController.getProductById);
 router.put('/:id', productController.updateProduct);
 router.delete('/:id', productController.deleteProduct);
 router.get('/title/:title', productController.getProductByTitle);

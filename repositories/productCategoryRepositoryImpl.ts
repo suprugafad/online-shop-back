@@ -26,10 +26,9 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     }
   };
 
-  //nado ispravit
-  async delete(id: number): Promise<void> {
-    const queryText = 'DELETE FROM product_category WHERE id = $1';
-    const values = [id];
+  async delete(categoryId: number): Promise<void> {  //by category_id
+    const queryText = 'DELETE FROM product_category WHERE category_id = $1';
+    const values = [categoryId];
 
     try {
       await query(queryText, values);
@@ -38,9 +37,9 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     }
   };
 
-  async getById(id: number): Promise<ProductCategoryDTO | null> {
-    const queryText = `SELECT product_id, category_id name FROM product_category WHERE id = $1;`;
-    const values = [id];
+  async getById(productId: number): Promise<ProductCategoryDTO | null> { //by product_id (bcs of int)
+    const queryText = `SELECT product_id, category_id name FROM product_category WHERE product_id = $1;`;
+    const values = [productId];
 
     try {
       const result = await query(queryText, values);
@@ -57,7 +56,7 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
   };
 
   async getByProductIdAndCategoryId(productId: number, categoryId: number): Promise<ProductCategoryDTO | null> {
-    const queryText = `SELECT product_id, category_id name FROM product_category WHERE product_id = $1 AND category_id = $2;`;
+    const queryText = `SELECT product_id, category_id FROM product_category WHERE product_id = $1 AND category_id = $2;`;
     const values = [productId, categoryId];
 
     try {
@@ -74,7 +73,6 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     return null;
   };
 
-//nado ispravit
   async filterByParameter(type: string, value: string | number): Promise<ProductCategoryDTO[]> { //product_id, category_id
     const queryText = `SELECT product_id, category_id FROM product_category WHERE ${type} = $1`;
     const values = [value];
@@ -82,15 +80,15 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
     try {
       const result = await query(queryText, values);
 
-      return result.rows.map(row => new ProductCategoryDTO(row.productId, row.categoryId));
+      return result.rows.map(row => new ProductCategoryDTO(row.product_id, row.category_id));
     } catch (err) {
       throw new Error(`Unable to get products by ${type}`);
     }
   };
-//nado ispravit
+
   async update(productCategory: ProductCategoryDTO): Promise<void> {
-    const queryText = 'UPDATE product_category SET product_id = $1, category_id = $2 WHERE id = $3';
-    const values = [productCategory.productId, productCategory.categoryId];
+    const queryText = 'UPDATE product_category SET category_id = $1 WHERE product_id = $2';
+    const values = [productCategory.categoryId, productCategory.productId];
 
     try {
       await query(queryText, values);
@@ -109,4 +107,15 @@ export class ProductCategoryRepositoryImpl implements IProductCategoryRepository
       throw new Error('Unable to delete product_category for product ID');
     }
   };
+
+  async deleteByProductIdAndCategoryId(productId: number, categoryId: number): Promise<void> {
+    const queryText = `DELETE FROM product_category WHERE product_id = $1 AND category_id = $2;`;
+    const values = [productId, categoryId];
+
+    try {
+      await query(queryText, values);
+    } catch (err) {
+      throw new Error('Unable to delete product_category for product ID');
+    }
+  }
 }

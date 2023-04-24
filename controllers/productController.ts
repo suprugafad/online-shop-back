@@ -7,6 +7,7 @@ const path = require("path");
 const productRepository = new ProductRepositoryImpl();
 
 class productController {
+
   public getProducts = async (req: Request, res: Response) => {
     try {
       const products = await productRepository.getAll();
@@ -21,6 +22,44 @@ class productController {
       res.status(500).json({ message: 'Error getting products.' });
     }
   };
+
+  public getPaginated = async (req: Request, res: Response) => {
+    try {
+      const page = parseInt(String(req.query.page)) || 1;
+      const limit = parseInt(String(req.query.limit)) || 8;
+
+      const products = await productRepository.getPaginated(page, limit);
+      const totalProducts = await productRepository.countAll();
+
+      if (!products) {
+        return res.status(404).json({ message: 'Products not found' });
+      }
+
+      res.status(200).json({ products, totalProducts });
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting products.'});
+    }
+  };
+
+  // public getPaginatedWithFilters = async (req: Request, res: Response) => {
+  //   try {
+  //     const page = parseInt(String(req.query.page)) || 1;
+  //     const limit = parseInt(String(req.query.limit)) || 8;
+  //     const minPrice = Number(req.query.minPrice) || 1;
+  //     const maxPrice = Number(req.query.maxPrice) || 1000;
+  //     const products = await productRepository.getPaginatedWithFilters(page, limit, minPrice, maxPrice);
+  //
+  //     if (!products) {
+  //       return res.status(404).json({ message: 'Products not found' });
+  //     }
+  //
+  //     res.status(200).json({ products });
+  //   } catch (err) {
+  //     console.error(err);
+  //     res.status(500).json({ message: 'Error getting products.'});
+  //   }
+  // };
 
   public getProductById = async (req: Request, res: Response) => {
     try {
@@ -56,10 +95,51 @@ class productController {
     }
   };
 
+  public getProductsByFilterWithPagination = async (req: Request, res: Response) => {
+    const page = parseInt(String(req.query.page)) || 1;
+    const limit = parseInt(String(req.query.limit)) || 8;
+    const minPrice = parseInt(String(req.query.minPrice)) || 1;
+    const maxPrice = parseInt(String(req.query.maxPrice)) || 1000;
+    const manufacturers = String(req.query.manufacturers).split(',');
+    const categories = String(req.query.categories).split(',');
+
+    try {
+      const products = await productRepository.filterWithPagination({ minPrice, maxPrice, manufacturers, categories }, page, limit);
+
+      if (!products) {
+        return res.status(404).json({ message: 'No products found within the specified filter.' });
+      }
+
+      res.status(200).json(products);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting products by filter.' });
+    }
+  };
+
+  public getAllManufacturers = async (req: Request, res: Response) => {
+    try {
+      const manufacturers = await productRepository.getAllManufacturers();
+
+      if (!manufacturers) {
+        return res.status(404).json({message: 'Manufacturers not found.'});
+      }
+
+      res.status(200).json(manufacturers);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting manufacturers.' });
+    }
+  };
+
   public updateProduct = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { title, description, price, amount, mainImage, additionalImages } = req.body;
+      const { title, description, price, amount } = req.body;
+
+      const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
+      const mainImage: string | null = files && files.mainImage ? files.mainImage[0].filename : null;
+      const additionalImages = files && files.additionalImages ? files.additionalImages.map(image => image.filename) : null;
 
       const product = await productRepository.getById(id);
 
@@ -67,7 +147,21 @@ class productController {
         return res.status(404).json({message: 'Product not found.'});
       }
 
-      const newProduct = new ProductDTO(product.id, title || product.title, description || product.description, price || product.price, amount || product.amount, mainImage || product.mainImage, additionalImages || product.additionalImages);
+      const newProduct = new ProductDTO(product.id, title || product.title,
+        description || product.description, price || product.price,
+        amount || product.amount, mainImage || product.mainImage,
+        additionalImages || product.additionalImages);
+
+      const oldImagePath = path.join(__dirname, "../assets/images/products", product.title);
+      const newImagePath = path.join(__dirname, "../assets/images/products", newProduct.title);
+
+      if (fs.existsSync(oldImagePath)) {
+        try {
+          fs.renameSync(oldImagePath, newImagePath);
+        } catch (err) {
+          console.error(`Error renaming folder: ${err}`);
+        }
+      }
 
       await productRepository.update(newProduct);
 
