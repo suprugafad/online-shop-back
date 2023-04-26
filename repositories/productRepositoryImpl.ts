@@ -52,15 +52,29 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     }
   };
 
-  async getPaginated(page: number, limit: number): Promise<ProductDTO[]> {
+  async getPaginated(page: number, limit: number, sort: string): Promise<ProductDTO[]> {
     const offset = (page - 1) * limit;
 
-    const queryText = `
+    let queryText = `
     SELECT id, title, description, price, amount, main_image, additional_images
-    FROM product
-    ORDER BY id ASC
-    LIMIT $1 OFFSET $2
-  `;
+    FROM product `;
+
+    switch (sort) {
+      case 'no':
+        queryText += ` ORDER BY id ASC `;
+        break;
+      case 'lowest-price':
+        queryText += ` ORDER BY price ASC `;
+        break;
+      case 'highest-price':
+        queryText += ` ORDER BY price DESC `;
+        break;
+      case 'newest':
+        queryText += ` ORDER BY created_at DESC `;
+        break;
+    }
+
+    queryText += ` LIMIT $1 OFFSET $2 `
 
     try {
       const result = await query(queryText, [limit, offset]);
@@ -78,7 +92,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     }
   };
 
-  async filterWithPagination(filterOptions: FilterOptions, page: number, limit: number): Promise<{ products: { product: ProductDTO, category_names: string[] }[], amount: number }> {
+  async filterWithPagination(filterOptions: FilterOptions, sort: string, page: number, limit: number): Promise<{ products: { product: ProductDTO, category_names: string[] }[], amount: number }> {
     let queryText = `SELECT product.id, product.title, product.description, product.price, product.amount, product.main_image, product.additional_images, 
                       ARRAY_AGG(category.name) AS category_names
                       FROM product
@@ -111,7 +125,6 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
 
     const allCategories: string[] = [];
     if (filterOptions.categories && filterOptions.categories[0]) {
-      console.log(filterOptions.categories)
       filterOptions.categories.forEach((category) => {
         values.push(category);
         allCategories.push(`$${values.length}`);
@@ -121,13 +134,27 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     }
 
     if (conditions.length > 0) {
-      queryText += ` WHERE ${conditions.join(' AND ')}`;
+      queryText += ` WHERE ${conditions.join(' AND ')} `;
+    }
+
+    queryText += ` GROUP BY product.id `;
+
+    switch (sort) {
+      case 'no':
+        queryText += ` ORDER BY product.id ASC `;
+        break;
+      case 'lowest-price':
+        queryText += ` ORDER BY product.price ASC `;
+        break;
+      case 'highest-price':
+        queryText += ` ORDER BY product.price DESC `;
+        break;
+      case 'newest':
+        queryText += ` ORDER BY product.created_at DESC `;
+        break;
     }
 
     try {
-      queryText += ` GROUP BY product.id
-                     ORDER BY product.id ASC `;
-
       const resultAll = await query(queryText, values);
       const amount = resultAll.rows.length;
 

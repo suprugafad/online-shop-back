@@ -27,8 +27,9 @@ class productController {
     try {
       const page = parseInt(String(req.query.page)) || 1;
       const limit = parseInt(String(req.query.limit)) || 8;
+      const sort = String(req.query.sort);
 
-      const products = await productRepository.getPaginated(page, limit);
+      const products = await productRepository.getPaginated(page, limit, sort);
       const totalProducts = await productRepository.countAll();
 
       if (!products) {
@@ -102,9 +103,10 @@ class productController {
     const maxPrice = parseInt(String(req.query.maxPrice)) || 1000;
     const manufacturers = String(req.query.manufacturers).split(',');
     const categories = String(req.query.categories).split(',');
+    const sort = String(req.query.sort);
 
     try {
-      const products = await productRepository.filterWithPagination({ minPrice, maxPrice, manufacturers, categories }, page, limit);
+      const products = await productRepository.filterWithPagination({ minPrice, maxPrice, manufacturers, categories }, sort, page, limit);
 
       if (!products) {
         return res.status(404).json({ message: 'No products found within the specified filter.' });
