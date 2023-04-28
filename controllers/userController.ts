@@ -41,7 +41,7 @@ class userController {
   public updateUser = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { username, email } = req.body;
+      const { username, email, role } = req.body;
 
       const user = await userRepository.getByIdWithPassword(id);
 
@@ -49,7 +49,7 @@ class userController {
         return res.status(404).json({message: 'User not found.'});
       }
 
-      const newUser = new UserDTO(user.userDTO.id, username || user.userDTO.username, email || user.userDTO.email);
+      const newUser = new UserDTO(user.userDTO.id, username || user.userDTO.username, email || user.userDTO.email, role || user.userDTO.role);
 
       await userRepository.update(newUser);
 

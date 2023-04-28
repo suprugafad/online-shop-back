@@ -10,7 +10,7 @@ const userRepository = new UserRepositoryImpl();
 class AuthController {
   public regUser = async (req: Request, res: Response) => {
     try {
-      const {username, email, password} = req.body;
+      const { username, email, password } = req.body;
 
       const users = await userRepository.getUserByEmail(email);
 
@@ -18,7 +18,7 @@ class AuthController {
         return res.status(409).send('User with this email already exists');
       }
 
-      const user = new UserDTO(null, username, email);
+      const user = new UserDTO(null, username, email, 'customer');
       await userRepository.create(user, password);
       res.status(201).send('User was created successfully');
     } catch (err) {
@@ -43,7 +43,8 @@ class AuthController {
         return res.status(401).send('Invalid credentials');
       }
 
-      const token = jwt.sign({ id: user.userDTO.id }, secret, { expiresIn: '1d' });
+      const token = jwt.sign({ id: user.userDTO.id, role: user.userDTO.role }, secret, { expiresIn: '1d' });
+
       res.cookie('token', token, { httpOnly: true, sameSite: 'none' });
 
       res.status(200).send({
@@ -57,6 +58,16 @@ class AuthController {
     } catch (err) {
       console.error(err);
       res.status(500).send('Error login user');
+    }
+  };
+
+  public logout = async (req: Request, res: Response) => {
+    try {
+      res.clearCookie('token', { httpOnly: true, sameSite: 'none' });
+      res.status(200).send('User logged out');
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error logging out user');
     }
   };
 
