@@ -1,13 +1,54 @@
-const authorizationMiddleware = (requiredRole: string) => {
-  return async (req: any, res: any, next: any) => {
-    if (!req.user || !req.user.role) {
-      return res.status(401).send('User role is missing or invalid');
+import { TokenExpiredError } from "jsonwebtoken";
+import { Request, Response, NextFunction } from "express";
+import { secret } from "../config/secrets";
+import {UserRole} from "../enums/userRoleEnum";
+const jwt = require("jsonwebtoken");
+
+const checkRoleInToken = (userRole: UserRole, roles: UserRole[], res: Response) => {
+  let hasRole = false;
+
+    if (roles.includes(userRole)) {
+      hasRole = true;
     }
 
-    if (req.user.role !== requiredRole) {
-      return res.status(403).send('Forbidden: insufficient permissions');
+  if (!hasRole) {
+    return res.status(403).json({ message: "You have not access" });
+  }
+}
+
+const authorizationMiddleware = (roles: UserRole[]) => {
+  return (req: Request, res: Response, next: NextFunction) => {
+    if (req.method === "OPTIONS") {
+      next()
     }
 
-    next();
-  };
+    const token = req.cookies.token;
+
+    try {
+      if (!token) {
+        return res.status(200).json({message: "Authorization token is missing or invalid"});
+      }
+      const { role } = jwt.verify(token, secret);
+      checkRoleInToken(role, roles, res);
+      next();
+    } catch (e) {
+      if (e instanceof TokenExpiredError) {
+        console.log("expired")
+        const payload = jwt.decode(token);
+        const newToken = jwt.sign({
+          id: payload.id,
+          role: payload.role,
+        }, secret, { expiresIn: "1d" });
+        console.log(newToken);
+        res.cookie('token', newToken, {
+          httpOnly: true,
+          secure: false,
+        });
+        checkRoleInToken(payload.role, roles, res);
+        next();
+      }
+    }
+  }
 };
+
+export default authorizationMiddleware;
