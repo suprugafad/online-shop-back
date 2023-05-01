@@ -15,12 +15,12 @@ export class CartRepositoryImpl implements IRepository<CartDTO> {
   }
 
   async getAll(): Promise<CartDTO[]> {
-    const queryText = 'SELECT id, user_id, created_at FROM cart ORDER BY id ASC';
+    const queryText = 'SELECT id, user_id FROM cart ORDER BY id ASC';
 
     try {
       const result = await query(queryText);
 
-      return result.rows.map(row => new CartDTO(row.id, row.userId, row.createdAt));
+      return result.rows.map(row => new CartDTO(row.id, row.userId));
     } catch (err) {
       throw new Error('Unable to get all carts');
     }
@@ -38,16 +38,34 @@ export class CartRepositoryImpl implements IRepository<CartDTO> {
   }
 
   async getById(id: number): Promise<CartDTO|null> {
-    const queryText = 'SELECT id, user_id, created_at FROM cart WHERE id = $1';
+    const queryText = 'SELECT id, user_id FROM cart WHERE id = $1';
     const values = [id];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, user_id, created_at} = result.rows[0];
+        const {id, user_id } = result.rows[0];
 
-        return new CartDTO(id, user_id, created_at);
+        return new CartDTO(id, user_id);
+      }
+    } catch (err) {
+      throw new Error('Unable to get cart');
+    }
+    return null;
+  }
+
+  async getByUserId(userId: number): Promise<CartDTO|null> {
+    const queryText = 'SELECT id, user_id FROM cart WHERE user_id = $1';
+    const values = [userId];
+
+    try {
+      const result = await query(queryText, values);
+
+      if (result.rows.length > 0) {
+        const { id, user_id } = result.rows[0];
+
+        return new CartDTO(id, user_id);
       }
     } catch (err) {
       throw new Error('Unable to get cart');

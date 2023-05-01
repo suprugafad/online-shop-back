@@ -10,5 +10,6 @@ router.get('/:id', cartItemController.getCartItemById);
 router.put('/:id', cartItemController.updateCartItem);
 router.get('/cart/:cartId', cartItemController.getAllByCartId);
 router.get('/cart/:cartId/count', cartItemController.getItemCount);
+router.delete('/cart/:cartId', cartItemController.deleteAllCartItemsFromCart);
 
 export default router;

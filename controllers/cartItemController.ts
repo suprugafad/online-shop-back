@@ -40,6 +40,7 @@ class CartItemController {
 
   public deleteCartItem = async (req: Request, res: Response) => {
     try {
+      console.log('delete')
       const id = parseInt(req.params.id);
       const cartItem = await cartItemRepository.getById(id);
 
@@ -55,6 +56,23 @@ class CartItemController {
       res.status(500).json({ message: 'Error deleting cart item.' });
     }
   };
+
+  public deleteAllCartItemsFromCart = async (req: Request, res: Response) => {
+    try {
+      const { cartId } = req.body;
+      const cartItem = await cartItemRepository.getAllByCartId(cartId);
+
+      if (!cartItem) {
+        return res.status(404).json({ message: 'Cart item not found.' });
+      }
+
+      await cartItemRepository.deleteAllByCartId(cartId);
+      res.status(200).send('All cart items deleted successfully');
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error deleting cart item.' });
+    }
+  }
 
   public getCartItemById = async (req: Request, res: Response) => {
     try {

@@ -38,6 +38,17 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
     }
   }
 
+  async deleteAllByCartId(cartId: number): Promise<void> {
+    const queryText = 'DELETE FROM cart_item WHERE cart_id = $1';
+    const values = [cartId];
+
+    try {
+      await query(queryText, values);
+    } catch (err) {
+      throw new Error('Unable to get cart items for cart');
+    }
+  }
+
   async getById(id: number): Promise<CartItemDTO|null> {
     const queryText = 'SELECT id, product_id, quantity, cart_id FROM cart_item WHERE id = $1';
     const values = [id];
@@ -46,9 +57,9 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, productId, quantity, cartId} = result.rows[0];
+        const {id, product_id, quantity, cart_id} = result.rows[0];
 
-        return new CartItemDTO(id, productId, quantity, cartId);
+        return new CartItemDTO(id, product_id, quantity, cart_id);
       }
     } catch (err) {
       throw new Error('Unable to get cart item');
@@ -74,7 +85,7 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
     try {
       const result = await query(queryText, values);
 
-      return result.rows.map(row => new CartItemDTO(row.id, row.productId, row.quantity, row.cartId));
+      return result.rows.map(row => new CartItemDTO(row.id, row.product_id, row.quantity, row.cart_id));
     } catch (err) {
       throw new Error('Unable to get cart items for cart');
     }
@@ -101,9 +112,9 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, productId, quantity, cartId} = result.rows[0];
+        const {id, product_id, quantity, cart_id} = result.rows[0];
 
-        return new CartItemDTO(id, productId, quantity, cartId);
+        return new CartItemDTO(id, product_id, quantity, cart_id);
       }
     } catch (err) {
       throw new Error('Unable to get cart item');

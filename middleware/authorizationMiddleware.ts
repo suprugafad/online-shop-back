@@ -19,7 +19,7 @@ const checkRoleInToken = (userRole: UserRole, roles: UserRole[], res: Response) 
 const authorizationMiddleware = (roles: UserRole[]) => {
   return (req: Request, res: Response, next: NextFunction) => {
     if (req.method === "OPTIONS") {
-      next()
+      next();
     }
 
     const token = req.cookies.token;

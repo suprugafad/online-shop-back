@@ -20,6 +20,7 @@ class AuthController {
 
       const user = new UserDTO(null, username, email, 'customer');
       await userRepository.create(user, password);
+
       res.status(201).send('User was created successfully');
     } catch (err) {
       console.error(err);
@@ -58,6 +59,20 @@ class AuthController {
       res.status(500).send('Error login user');
     }
   };
+
+  public getUserIdFromToken = async (req: Request, res: Response) => {
+    try {
+      const token = req.cookies.token;
+      console.log(token);
+      const data = jwt.verify(token, secret);
+      console.log('token data:')
+      console.log(data);
+      res.status(200).send({ userId: data.id });
+    } catch (err) {
+      console.error(err);
+      res.status(500).send('Error getting user_id');
+    }
+  }
 
   public logout = async (req: Request, res: Response) => {
     try {

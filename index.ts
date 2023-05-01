@@ -9,6 +9,7 @@ import paymentRouter from "./routers/paymentRouter";
 import productRouter from "./routers/productRouter";
 import productCategoryRouter from "./routers/productCategoryRouter";
 import config from "./config/config";
+import cartRouter from "./routers/cartRouter";
 
 const path = require("path");
 const cors = require("cors");
@@ -35,6 +36,7 @@ app.use("/api/users", userRouter);
 app.use("/api/addresses", addressRouter);
 app.use("/api/usersAddresses", userAddressRouter);
 app.use("/api/auth", authRouter);
+app.use("/api/carts", cartRouter);
 app.use("/api/cartItems", cartItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/payments", paymentRouter);

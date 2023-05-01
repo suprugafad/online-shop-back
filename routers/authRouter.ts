@@ -18,5 +18,6 @@ router.post('/logout', authController.logout);
 router.get('/protected', authorizationMiddleware([ UserRole.ADMIN, UserRole.CUSTOMER ]), authController.check);
 router.get('/admin', authorizationMiddleware([ UserRole.ADMIN ]), authController.check);
 router.post('/change_password', authController.changePassword);
+router.get('/userId', authController.getUserIdFromToken);
 
 export default router;
