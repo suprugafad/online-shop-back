@@ -75,7 +75,7 @@ export class PaymentRepositoryImpl implements IPaymentRepository {
 
       return result.rows.map(row => new PaymentDTO(row.id, row.user_id, row.order_id, row.transaction_id, row.amount, row.transaction_date, row.method, row.status));
     } catch (err) {
-      throw new Error('Unable to get payments by ${type}');
+      throw new Error(`Unable to get payments by ${type}`);
     }
   };
 

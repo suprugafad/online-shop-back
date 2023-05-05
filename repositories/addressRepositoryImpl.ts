@@ -4,11 +4,13 @@ import { IAddressRepository } from "./interfaces/IAddressRepository";
 
 export class AddressRepositoryImpl implements IAddressRepository {
   async create(address: AddressDTO): Promise<void> {
-    const queryText = `INSERT INTO address (country, city, street, house, apartment) VALUES ($1, $2, $3, $4, $5);`;
+    const queryText = `INSERT INTO address (country, city, street, house, apartment) VALUES ($1, $2, $3, $4, $5) RETURNING id;`;
     const values = [address.country, address.city, address.street, address.house, address.apartment];
 
     try {
-      await query(queryText, values);
+      const result = await query(queryText, values);
+
+      return result.rows[0].id;
     } catch (err) {
       throw new Error('Unable to create address');
     }
@@ -42,6 +44,19 @@ export class AddressRepositoryImpl implements IAddressRepository {
       throw new Error('Unable to get address');
     }
     return null;
+  };
+
+  async getByUserId(userId: number): Promise<AddressDTO[]> {
+    const queryText = `SELECT id, country, city, street, house, apartment FROM address WHERE id IN (SELECT address_id FROM user_address WHERE user_id = $1);`;
+    const values = [userId];
+
+    try {
+      const result = await query(queryText, values);
+
+      return result.rows.map(row => new AddressDTO(row.id, row.country, row.city, row.street, row.house, row.apartment));
+    } catch (err) {
+      throw new Error('Unable to get addresses by user ID');
+    }
   };
 
   async getByOrderId(orderId: number): Promise<AddressDTO | null> {
@@ -97,16 +112,18 @@ export class AddressRepositoryImpl implements IAddressRepository {
     }
   };
 
-  async isExist(address: AddressDTO): Promise<boolean> {
-    const queryText = 'SELECT id FROM address WHERE country = $1, city = $2, street = $3, house = $4, apartment = $5';
+  async isExist(address: AddressDTO): Promise<{ isExist: boolean, id: number }> {
+    const queryText = 'SELECT id FROM address WHERE country = $1 AND city = $2 AND street = $3 AND house = $4 AND apartment = $5';
     const values = [address.country, address.city, address.street, address.house, address.apartment];
 
     try {
       const result = await query(queryText, values);
-
-      return result.rows.length !== 0;
+      const isExist = result.rows.length !== 0;
+      const id = result.rows.length > 0 ? result.rows[0].id : 0;
+      console.log(id)
+      return { isExist, id };
     } catch (err) {
-      throw new Error('Unable to get address by order ID');
+      throw new Error('Unable to check address');
     }
   };
 }

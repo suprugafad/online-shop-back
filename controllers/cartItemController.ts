@@ -40,7 +40,6 @@ class CartItemController {
 
   public deleteCartItem = async (req: Request, res: Response) => {
     try {
-      console.log('delete')
       const id = parseInt(req.params.id);
       const cartItem = await cartItemRepository.getById(id);
 
@@ -59,7 +58,8 @@ class CartItemController {
 
   public deleteAllCartItemsFromCart = async (req: Request, res: Response) => {
     try {
-      const { cartId } = req.body;
+      const cartId = parseInt(req.params.cartId);
+      console.log('delete', cartId)
       const cartItem = await cartItemRepository.getAllByCartId(cartId);
 
       if (!cartItem) {

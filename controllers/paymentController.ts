@@ -109,13 +109,14 @@ class paymentController {
     try {
       const { userId, orderId, transactionId, amount, transactionDate, method, status } = req.body;
 
-      const existingPayment = await paymentRepository.filterByParameter('transactionId', transactionId);
+      const existingPayment = await paymentRepository.filterByParameter('order_id', orderId);
 
-      if (existingPayment) {
-        return res.status(400).send(`Payment with transaction ID already exists.`);
+      if (existingPayment.length !== 0) {
+        return res.status(400).send(`Payment for this order already exists.`);
       }
 
-      const payment = new PaymentDTO(null, userId, orderId, transactionId, amount, transactionDate, method, status);
+      const payment = new PaymentDTO(null, userId, orderId, transactionId, amount, transactionDate, method.toLowerCase(), status.toLowerCase());
+
       await paymentRepository.create(payment);
 
       res.status(201).send(`Payment was added`);

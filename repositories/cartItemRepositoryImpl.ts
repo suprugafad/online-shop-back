@@ -39,6 +39,7 @@ export class CartItemRepositoryImpl implements ICartItemRepository {
   }
 
   async deleteAllByCartId(cartId: number): Promise<void> {
+    console.log('delete all')
     const queryText = 'DELETE FROM cart_item WHERE cart_id = $1';
     const values = [cartId];
 

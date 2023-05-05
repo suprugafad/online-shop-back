@@ -45,14 +45,14 @@ export class UserAddressRepositoryImpl implements IUserAddressRepository {
   };
 
   async getByUserIdAndAddressId(userId: number, addressId: number): Promise<UserAddressDTO | null> {
-    const queryText = `SELECT id, user_id, address_id FROM user_address WHERE user_id = $1 AND address_id = $2;`;
+    const queryText = `SELECT user_id, address_id FROM user_address WHERE user_id = $1 AND address_id = $2;`;
     const values = [userId, addressId];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, userId, addressId} = result.rows[0];
+        const { id, userId, addressId } = result.rows[0];
 
         return new UserAddressDTO(id, userId, addressId);
       }

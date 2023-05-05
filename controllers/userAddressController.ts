@@ -55,7 +55,7 @@ class UserAddressController {
   };
 
   public createUserAddress = async (req: Request, res: Response): Promise<void> => {
-    const {userId, addressId} = req.body;
+    const { userId, addressId } = req.body;
 
     const existingUserAddress = await UserAddressRepository.getByUserIdAndAddressId(userId, addressId);
 

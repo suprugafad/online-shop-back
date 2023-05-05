@@ -1,6 +1,7 @@
 import { OrderRepositoryImpl } from '../repositories/orderRepositoryImpl';
 import OrderDTO from "../dtos/orderDTO";
 import { Request, Response } from "express";
+import {OrderStatus} from "../enums/orderStatusEnum";
 
 const orderRepository = new OrderRepositoryImpl();
 
@@ -65,7 +66,7 @@ class orderController {
         return res.status(404).json({message: 'Order not found.'});
       }
 
-      const newProduct = new OrderDTO(order.id, order.products, order.userId, status || order.status, comment || order.comment,totalPrice || order.totalPrice,  addressId || order.addressId);
+      const newProduct = new OrderDTO(order.id, order.products, order.userId, status || order.status, comment || order.comment,totalPrice || order.totalPrice,  addressId || order.addressId, order.createdAt);
 
       await orderRepository.update(newProduct);
 
@@ -78,12 +79,12 @@ class orderController {
 
   public createOrder = async (req: Request, res: Response) => {
     try {
-      const { products, userId, status, comment, totalPrice, addressId } = req.body;
+      const { products, userId, comment, totalPrice, addressId } = req.body;
 
-      const order = new OrderDTO(null, products, userId, status, comment, totalPrice, addressId);
-      await orderRepository.create(order);
+      const order = new OrderDTO(null, products, userId, OrderStatus.PENDING, comment, totalPrice, addressId, null);
+      const orderId = await orderRepository.create(order);
 
-      res.status(201).send(`Order was added`);
+      res.status(201).json({ message:`Order was added`, orderId });
     } catch (err) {
       console.error(err);
       res.status(500).send('Error creating order');

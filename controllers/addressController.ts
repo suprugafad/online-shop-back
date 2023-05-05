@@ -1,6 +1,6 @@
 import {Request, Response} from "express";
 
-const AddressDTO = require('../dtos/addressDTO')
+import AddressDTO from '../dtos/addressDTO';
 import { AddressRepositoryImpl } from '../repositories/addressRepositoryImpl';
 
 const addressRepository = new AddressRepositoryImpl();
@@ -12,12 +12,14 @@ class AddressController {
 
       const newAddress = new AddressDTO(null, country, city, street, house, apartment);
 
-      if (!await addressRepository.isExist(newAddress)) {
-        await addressRepository.create(newAddress);
-        res.status(200).send('Address created successfully');
+      const address = await addressRepository.isExist(newAddress);
+
+      if (!address.isExist) {
+        const id = await addressRepository.create(newAddress);
+
+        return res.status(200).json({ message: 'Address created successfully', addressId: id });
       } else {
-        res.status(400).send(`Such address is already exist`);
-        return;
+        return res.status(203).json({ message: `Such address is already exist`, addressId: address.id });
       }
     } catch (err) {
       console.error(err);
@@ -122,6 +124,23 @@ class AddressController {
       }
 
       res.status(200).json(address);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting address by order ID' });
+    }
+  };
+
+  public getAddressesByUserId = async (req: Request, res: Response) => {
+    const userId = parseInt(req.params.userId);
+
+    try {
+      const addresses = await addressRepository.getByUserId(userId);
+
+      if (!addresses) {
+        return res.status(404).json({ message: 'No address found for the given user ID' });
+      }
+
+      res.status(200).json(addresses);
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Error getting address by order ID' });

@@ -5,13 +5,13 @@ class PaymentDTO {
   private readonly _id: number | null;
   private _userId: number;
   private _orderId: number;
-  private _transactionId: string;
+  private _transactionId: string | null;
   private _amount: number;
-  private _transactionDate: Date;
+  private _transactionDate: Date | null;
   private _method: PaymentMethod;
   private _status: PaymentStatus;
 
-  constructor(id: number | null, userId: number, orderId: number, transactionId: string, amount: number, transactionDate: Date, method: PaymentMethod, status: PaymentStatus) {
+  constructor(id: number | null, userId: number, orderId: number, transactionId: string | null, amount: number, transactionDate: Date | null, method: PaymentMethod, status: PaymentStatus) {
     this._id = id;
     this._userId = userId;
     this._orderId = orderId;
@@ -42,11 +42,11 @@ class PaymentDTO {
     this._orderId = orderId;
   }
 
-  get transactionId(): string {
+  get transactionId(): string | null {
     return this._transactionId;
   }
 
-  set transactionId(transactionId: string) {
+  set transactionId(transactionId: string | null) {
     this._transactionId = transactionId;
   }
 
@@ -58,11 +58,11 @@ class PaymentDTO {
     this._amount = amount;
   }
 
-  get transactionDate(): Date {
+  get transactionDate(): Date | null {
     return this._transactionDate;
   }
 
-  set transactionDate(transactionDate: Date) {
+  set transactionDate(transactionDate: Date | null) {
     this._transactionDate = transactionDate;
   }
 

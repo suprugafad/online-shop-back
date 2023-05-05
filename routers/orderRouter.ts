@@ -5,7 +5,9 @@ const router = Router();
 
 router.get("/", orderController.getOrders);
 router.get("/:id", orderController.getOrderById);
-router.post('/:filterType/:filterValue', orderController.getOrdersByFilter);
+router.get('/:filterType/:filterValue', orderController.getOrdersByFilter);
 router.post("/", orderController.createOrder);
 router.put("/:id", orderController.updateOrder);
 router.delete("/:id", orderController.deleteOrder);
+
+export default router;

@@ -10,6 +10,7 @@ import productRouter from "./routers/productRouter";
 import productCategoryRouter from "./routers/productCategoryRouter";
 import config from "./config/config";
 import cartRouter from "./routers/cartRouter";
+import orderRouter from "./routers/orderRouter";
 
 const path = require("path");
 const cors = require("cors");
@@ -42,6 +43,7 @@ app.use("/api/categories", categoryRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/products", productRouter);
 app.use("/api/productCategories", productCategoryRouter);
+app.use("/api/orders", orderRouter);
 
 const start = async (): Promise<void> => {
     try {

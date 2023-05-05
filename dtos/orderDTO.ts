@@ -11,15 +11,17 @@ class OrderDTO {
   private _comment: string | null;
   private _totalPrice: number;
   private _addressId: number;
+  private _createdAt: Date | null;
 
-  constructor(id: number | null, products: DBProducts, userId: number, status: OrderStatus, comment: string | null, totalPrice: number, addressID: number) {
+  constructor(id: number | null, products: DBProducts, userId: number, status: OrderStatus, comment: string | null, totalPrice: number, addressId: number, createdAt: Date | null) {
     this._id = id;
     this._products = products;
     this._userId = userId;
     this._status = status;
     this._comment = comment;
     this._totalPrice = totalPrice;
-    this._addressId = addressID;
+    this._addressId = addressId;
+    this._createdAt = createdAt;
   }
 
   get id(): number | null {
@@ -67,11 +69,19 @@ class OrderDTO {
   }
 
   get addressId(): number {
-    return this._totalPrice;
+    return this._addressId;
   }
 
   set addressId(addressId: number) {
     this._addressId = addressId;
+  }
+
+  get createdAt(): Date | null {
+    return this._createdAt;
+  }
+
+  set createdAt(createdAt: Date | null) {
+    this._createdAt = createdAt;
   }
 }
 
