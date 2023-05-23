@@ -1,10 +1,12 @@
 import { secret } from '../config/secrets';
 import UserDTO from '../dtos/userDTO';
 import { UserRepositoryImpl } from '../repositories/userRepositoryImpl';
-import {Request, Response} from "express";
+import { Request, Response } from "express";
+import { sendResetPasswordEmail } from "../services/emailService";
+import { checkResetToken, deleteResetToken, saveResetToken } from "../repositories/resetTokenController";
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-
+const uuid = require('uuid');
 const userRepository = new UserRepositoryImpl();
 
 class AuthController {
@@ -63,10 +65,7 @@ class AuthController {
   public getUserIdFromToken = async (req: Request, res: Response) => {
     try {
       const token = req.cookies.token;
-      console.log(token);
       const data = jwt.verify(token, secret);
-      console.log('token data:')
-      console.log(data);
       res.status(200).send({ userId: data.id });
     } catch (err) {
       console.error(err);
@@ -98,29 +97,72 @@ class AuthController {
     } catch (e) {
       return res.status(403).json({ isAuthenticated: false });
     }
-  }
+  };
+
+  public checkResetToken = async (req: Request, res: Response) => {
+    try {
+      const resetToken = req.params.resetToken;
+      const id = parseInt(req.params.id);
+
+      const isValidToken = await checkResetToken(id, resetToken);
+
+      if (!isValidToken) {
+        return res.status(401).json({ message: 'Недействительный токен сброса пароля', isValidToken });
+      }
+
+      return res.status(200).json({ isValidToken });
+
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({message: 'Error getting token.'});
+    }
+  };
 
   public changePassword = async (req: Request, res: Response) => {
     try {
-      const { userId, currentPassword, newPassword } = req.body;
+      const { newPassword } = req.body;
+      const id = parseInt(req.params.id);
+      const resetToken = req.params.resetToken;
 
-      const user = await userRepository.getByIdWithPassword(userId);
-
-      if (!user) {
-        return res.status(401).send('Invalid credentials');
+      const isValidToken = await checkResetToken(id, resetToken);
+      if (!isValidToken) {
+        return res.status(401).send('Недействительный токен сброса пароля');
       }
 
-      const validPassword = await bcrypt.compare(currentPassword, user.password);
-
-      if (!validPassword) {
-        return res.status(401).send('Invalid credentials');
-      }
-
-      await userRepository.updatePassword(userId, newPassword);
+      await userRepository.updatePassword(id, newPassword);
+      await deleteResetToken(id);
       res.send('Password was changed successfully');
     } catch (err) {
       console.error(err);
       res.status(500).json({ message: 'Error getting user by ID.' });
+    }
+  };
+
+  public forgotPassword = async (req: Request , res: Response) => {
+    try {
+      const { email } = req.body;
+
+      const user = await userRepository.getUserByEmail(email);
+      if (!user) {
+        return res.status(404).json({ message: 'User with is email not found' });
+      }
+
+      const resetToken = uuid.v4();
+
+      if (!user.userDTO.id) {
+        return res.status(404).json({ message: 'Id is null' });
+      }
+
+      await saveResetToken(user.userDTO.id, resetToken);
+
+      const resetPasswordLink = `http://localhost:3000/resetPassword/${user.userDTO.id}/${resetToken}`;
+
+      await sendResetPasswordEmail(email, resetPasswordLink);
+
+      res.status(200).json({ message: 'Ссылка для сброса пароля отправлена на указанный email' });
+    } catch (error) {
+      console.error('Ошибка при сбросе пароля:', error);
+      res.status(500).json({ message: 'Ошибка при сбросе пароля' });
     }
   };
 }

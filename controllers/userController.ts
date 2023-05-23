@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
-
-const UserDTO = require('../dtos/userDTO')
+import UserDTO from '../dtos/userDTO';
 import { UserRepositoryImpl } from '../repositories/userRepositoryImpl';
 
 const userRepository = new UserRepositoryImpl();
@@ -38,6 +37,23 @@ class userController {
     }
   };
 
+  public getUserByEmail = async (req: Request, res: Response) => {
+    try {
+      const email = req.params.email;
+
+      const user = await userRepository.getUserByEmail(email);
+
+      if (!user) {
+        return res.status(404).json({message: 'User not found'});
+      }
+
+      res.status(200).json(user.userDTO);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting user by ID.' });
+    }
+  };
+
   public updateUser = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -48,6 +64,8 @@ class userController {
       if (!user) {
         return res.status(404).json({message: 'User not found.'});
       }
+
+      console.log(user.userDTO.id, username || user.userDTO.username, email || user.userDTO.email, role || user.userDTO.role)
 
       const newUser = new UserDTO(user.userDTO.id, username || user.userDTO.username, email || user.userDTO.email, role || user.userDTO.role);
 

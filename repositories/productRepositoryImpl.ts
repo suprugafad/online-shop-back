@@ -11,9 +11,9 @@ export interface FilterOptions {
 
 export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   async create(product: ProductDTO): Promise<void> {
-    const queryText = `INSERT INTO product (title, description, price, amount, main_image, additional_images) VALUES ($1, $2, $3, $4, $5, $6);`;
+    const queryText = `INSERT INTO product (title, manufacturer, description, price, amount, main_image, additional_images) VALUES ($1, $2, $3, $4, $5, $6, $7);`;
     const additionalImages = product.additionalImages ? product.additionalImages.join(',') : null;
-    const values = [product.title, product.description, product.price, product.amount, product.mainImage, additionalImages];
+    const values = [product.title, product.manufacturer, product.description, product.price, product.amount, product.mainImage, additionalImages];
 
     try {
       await query(queryText, values);
@@ -34,7 +34,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   };
 
   async getAll(): Promise<ProductDTO[]> {
-    const queryText = `SELECT id, title, description, price, amount, main_image, additional_images FROM product ORDER BY id ASC;`;
+    const queryText = `SELECT id, title, manufacturer, description, price, amount, main_image, additional_images FROM product ORDER BY id ASC;`;
 
     try {
       const result = await query(queryText);
@@ -45,7 +45,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
           additionalImages = row.additional_images.split(',');
         }
 
-        return new ProductDTO(row.id, row.title, row.description, row.price, row.amount, row.main_image, additionalImages);
+        return new ProductDTO(row.id, row.title, row.manufacturer, row.description, row.price, row.amount, row.main_image, additionalImages);
       });
     } catch (err) {
       throw new Error('Unable to get all products');
@@ -56,7 +56,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     const offset = (page - 1) * limit;
 
     let queryText = `
-    SELECT id, title, description, price, amount, main_image, additional_images
+    SELECT id, title, manufacturer, description, price, amount, main_image, additional_images
     FROM product `;
 
     switch (sort) {
@@ -85,7 +85,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
           additionalImages = row.additional_images.split(',');
         }
 
-        return new ProductDTO(row.id, row.title, row.description, row.price, row.amount, row.main_image, additionalImages);
+        return new ProductDTO(row.id, row.title, row.manufacturer, row.description, row.price, row.amount, row.main_image, additionalImages);
       });
     } catch (err) {
       throw new Error('Unable to get paginated products');
@@ -93,7 +93,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   };
 
   async filterWithPagination(filterOptions: FilterOptions, sort: string, page: number, limit: number): Promise<{ products: { product: ProductDTO, category_names: string[] }[], amount: number }> {
-    let queryText = `SELECT product.id, product.title, product.description, product.price, product.amount, product.main_image, product.additional_images, 
+    let queryText = `SELECT product.id, product.title, product.manufacturer, product.description, product.price, product.amount, product.main_image, product.additional_images, 
                       ARRAY_AGG(category.name) AS category_names
                       FROM product
                       LEFT JOIN product_category ON product.id = product_category.product_id 
@@ -164,14 +164,14 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
         const result = await query(queryText, values);
 
         for (const row of result.rows) {
-          const { id, title, description, price, amount, main_image, additional_images, category_names } = row;
+          const { id, title, manufacturer, description, price, amount, main_image, additional_images, category_names } = row;
           let additionalImagesArr: string[] | null = null;
 
           if (additional_images) {
             additionalImagesArr = additional_images.split(',');
           }
 
-          const product = new ProductDTO(id, title, description, price, amount, main_image, additionalImagesArr);
+          const product = new ProductDTO(id, title, manufacturer, description, price, amount, main_image, additionalImagesArr);
           products.push({ product, category_names });
         }
 
@@ -184,103 +184,15 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     return { products: [], amount: 0 };
   }
 
-
-  // async getByFilterWithPagination(filterOptions: FilterOptions, page: number, limit: number): Promise<{ products: ProductDTO[], amount: number }> {
-  //   let queryText = `SELECT id, title, description, price, amount, main_image, additional_images FROM product`;
-  //   const values: any[] = [];
-  //   const conditions: string[] = [];
-  //   const offset = (page - 1) * limit;
-  //
-  //   if (filterOptions.minPrice) {
-  //     values.push(filterOptions.minPrice);
-  //     conditions.push(`price >= $${values.length}`);
-  //   }
-  //
-  //   if (filterOptions.maxPrice) {
-  //     values.push(filterOptions.maxPrice);
-  //     conditions.push(`price <= $${values.length}`);
-  //   }
-  //   const allManufacturers: string[] = [];
-  //
-  //   if (filterOptions.manufacturers && filterOptions.manufacturers[0]) {
-  //     filterOptions.manufacturers.forEach((manufacturer) => {
-  //       values.push(manufacturer);
-  //       allManufacturers.push(`$${values.length}`);
-  //     });
-  //
-  //     conditions.push(`manufacturer = ${allManufacturers.join(' OR ')}`);
-  //   }
-  //
-  //   if (conditions.length > 0) {
-  //     queryText += ` WHERE ${conditions.join(' AND ')}`;
-  //   }
-  //
-  //   try {
-  //     const resultAll = await query(queryText, values);
-  //     const amount = resultAll.rows.length;
-  //
-  //     if (amount > 0) {
-  //       const products: ProductDTO[] = [];
-  //       queryText += ` ORDER BY id ASC LIMIT ${limit} OFFSET ${offset} `;
-  //       const result = await query(queryText, values);
-  //
-  //       for (const row of result.rows) {
-  //         const { id, title, description, price, amount, main_image, additional_images } = row;
-  //         let additionalImagesArr: string[] | null = null;
-  //
-  //         if (additional_images) {
-  //           additionalImagesArr = additional_images.split(',');
-  //         }
-  //
-  //         const product = new ProductDTO(id, title, description, price, amount, main_image, additionalImagesArr);
-  //         products.push(product);
-  //       }
-  //
-  //       return { products, amount };
-  //     }
-  //   } catch (err) {
-  //     throw new Error('Unable to get products by price range');
-  //   }
-  //
-  //   return { products: [], amount: 0 };
-  // }
-
-  // async getPaginatedWithFilters(page: number, limit: number, minPrice: number, maxPrice: number): Promise<ProductDTO[]> {
-  //   const offset = (page - 1) * limit;
-  //
-  //   const queryText = `
-  //   SELECT id, title, description, price, amount, main_image, additional_images
-  //   FROM product
-  //   WHERE price >= $1 AND price <= $2
-  //   ORDER BY id ASC
-  //   LIMIT $3 OFFSET $4
-  // `;
-  //
-  //   try {
-  //     const result = await query(queryText, [minPrice, maxPrice, limit, offset]);
-  //     let additionalImages: string[] | null = null;
-  //
-  //     return result.rows.map(row => {
-  //       if (row.additional_images) {
-  //         additionalImages = row.additional_images.split(',');
-  //       }
-  //
-  //       return new ProductDTO(row.id, row.title, row.description, row.price, row.amount, row.main_image, additionalImages);
-  //     });
-  //   } catch (err) {
-  //     throw new Error('Unable to get paginated products');
-  //   }
-  // };
-
   async getById(id: number): Promise<ProductDTO | null> {
-    const queryText = `SELECT id, title, description, price, amount, main_image, additional_images FROM product WHERE id = $1;`;
+    const queryText = `SELECT id, title, manufacturer, description, price, amount, main_image, additional_images FROM product WHERE id = $1;`;
     const values = [id];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, title, description, price, amount, main_image, additional_images} = result.rows[0];
+        const {id, title, manufacturer, description, price, amount, main_image, additional_images} = result.rows[0];
 
         let additionalImagesArr: string[] | null = null;
 
@@ -288,7 +200,7 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
           additionalImagesArr = additional_images.split(',');
         }
 
-        return new ProductDTO(id, title, description, price, amount, main_image, additionalImagesArr);
+        return new ProductDTO(id, title, manufacturer, description, price, amount, main_image, additionalImagesArr);
       }
     } catch (err) {
       throw new Error('Unable to get product by id');
@@ -313,21 +225,21 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   }
 
   async getByTitle(title: string): Promise<ProductDTO | null> {
-    const queryText = `SELECT id, title, description, price, amount, main_image, additional_images FROM product WHERE title = $1;`;
+    const queryText = `SELECT id, title, manufacturer, description, price, amount, main_image, additional_images FROM product WHERE title = $1;`;
     const values = [title];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, title, description, price, amount, main_image, additional_images} = result.rows[0];
+        const {id, title, manufacturer, description, price, amount, main_image, additional_images} = result.rows[0];
         let additionalImagesArr: string[] | null = null;
 
         if (additional_images) {
           additionalImagesArr = additional_images.split(',');
         }
 
-        return new ProductDTO(id, title, description, price, amount, main_image, additionalImagesArr);
+        return new ProductDTO(id, title, manufacturer, description, price, amount, main_image, additionalImagesArr);
       }
     } catch (err) {
       throw new Error('Unable to get product by title');
@@ -335,42 +247,8 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     return null;
   };
 
-  // async getByPriceRange(minPrice: number, maxPrice: number, manufacturer: string): Promise<ProductDTO[]> {
-  //   const queryText = `SELECT id, title, description, price, amount, main_image, additional_images
-  //                     FROM product
-  //                     WHERE price BETWEEN $1 AND $2 AND manufacturer = $3`
-  //
-  //   const values = [minPrice, maxPrice, manufacturer];
-  //
-  //   try {
-  //     const result = await query(queryText, values);
-  //
-  //     if (result.rows.length > 0) {
-  //       const products: ProductDTO[] = [];
-  //
-  //       for (const row of result.rows) {
-  //         const {id, title, description, price, amount, main_image, additional_images} = row;
-  //         let additionalImagesArr: string[] | null = null;
-  //
-  //         if (additional_images) {
-  //           additionalImagesArr = additional_images.split(',');
-  //         }
-  //
-  //         const product = new ProductDTO(id, title, description, price, amount, main_image, additionalImagesArr);
-  //         products.push(product);
-  //       }
-  //
-  //       return products;
-  //     }
-  //   } catch (err) {
-  //     throw new Error('Unable to get products by price range');
-  //   }
-  //
-  //   return [];
-  // }
-
   async sortAllByPrice(): Promise<ProductDTO[] | null> {
-    const queryText = `SELECT id, title, description, price, amount, main_image, additional_images FROM product ORDER BY price ASC;`;
+    const queryText = `SELECT id, title, manufacturer, description, price, amount, main_image, additional_images FROM product ORDER BY price ASC;`;
 
     try {
       const result = await query(queryText);
@@ -379,14 +257,14 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
         const products: ProductDTO[] = [];
 
         for (const row of result.rows) {
-          const {id, title, description, price, amount, main_image, additional_images} = row;
+          const {id, title, manufacturer, description, price, amount, main_image, additional_images} = row;
           let additionalImagesArr: string[] | null = null;
 
           if (additional_images) {
             additionalImagesArr = additional_images.split(',');
           }
 
-          const product = new ProductDTO(id, title, description, price, amount, main_image, additionalImagesArr);
+          const product = new ProductDTO(id, title, manufacturer, description, price, amount, main_image, additionalImagesArr);
           products.push(product);
         }
 
@@ -400,10 +278,10 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
   }
 
   async update(product: ProductDTO): Promise<void> {
-    const queryText = 'UPDATE product SET title = $1, description = $2, price = $3, amount = $4, main_image = $5, additional_images = $6 WHERE id = $7';
+    const queryText = 'UPDATE product SET title = $1, manufacturer = $2, description = $3, price = $4, amount = $5, main_image = $6, additional_images = $7 WHERE id = $8';
     const additionalImages = product.additionalImages ? product.additionalImages.join(',') : null;
 
-    const values = [product.title, product.description, product.price, product.amount, product.mainImage, additionalImages, product.id];
+    const values = [product.title, product.manufacturer, product.description, product.price, product.amount, product.mainImage, additionalImages, product.id];
 
     try {
       await query(queryText, values);

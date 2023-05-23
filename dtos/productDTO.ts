@@ -1,15 +1,17 @@
 class ProductDTO {
   private readonly _id: number | null;
   private _title: string;
+  private _manufacturer: string;
   private _description: string;
   private _price: number;
   private _amount: number
   private _mainImage: string | null;
   private _additionalImages: string[] | null;
 
-  constructor(id: number | null, title: string, description: string, price: number, amount: number, mainImage: string | null, additionalImages: string[] | null) {
+  constructor(id: number | null, title: string, manufacturer: string, description: string, price: number, amount: number, mainImage: string | null, additionalImages: string[] | null) {
     this._id = id;
     this._title = title;
+    this._manufacturer = manufacturer;
     this._description = description;
     this._price = price;
     this._amount = amount;
@@ -27,6 +29,14 @@ class ProductDTO {
 
   set title(title: string) {
     this._title = title;
+  }
+
+  get manufacturer(): string {
+    return this._manufacturer;
+  }
+
+  set manufacturer(manufacturer: string) {
+    this._manufacturer = manufacturer;
   }
 
   get description(): string {

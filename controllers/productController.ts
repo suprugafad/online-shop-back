@@ -43,25 +43,6 @@ class productController {
     }
   };
 
-  // public getPaginatedWithFilters = async (req: Request, res: Response) => {
-  //   try {
-  //     const page = parseInt(String(req.query.page)) || 1;
-  //     const limit = parseInt(String(req.query.limit)) || 8;
-  //     const minPrice = Number(req.query.minPrice) || 1;
-  //     const maxPrice = Number(req.query.maxPrice) || 1000;
-  //     const products = await productRepository.getPaginatedWithFilters(page, limit, minPrice, maxPrice);
-  //
-  //     if (!products) {
-  //       return res.status(404).json({ message: 'Products not found' });
-  //     }
-  //
-  //     res.status(200).json({ products });
-  //   } catch (err) {
-  //     console.error(err);
-  //     res.status(500).json({ message: 'Error getting products.'});
-  //   }
-  // };
-
   public getProductById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -137,7 +118,7 @@ class productController {
   public updateProduct = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { title, description, price, amount } = req.body;
+      const { title, manufacturer, description, price, amount } = req.body;
 
       const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
       const mainImage: string | null = files && files.mainImage ? files.mainImage[0].filename : null;
@@ -150,6 +131,7 @@ class productController {
       }
 
       const newProduct = new ProductDTO(product.id, title || product.title,
+        manufacturer || product.manufacturer,
         description || product.description, price || product.price,
         amount || product.amount, mainImage || product.mainImage,
         additionalImages || product.additionalImages);
@@ -176,7 +158,7 @@ class productController {
 
   public postProduct = async (req: Request, res: Response) => {
     try {
-      const { title, description, price, amount } = req.body;
+      const { title, manufacturer, description, price, amount } = req.body;
 
       const files = req.files as { [fieldname: string]: Express.Multer.File[] } | undefined;
       const mainImage: string | null = files && files.mainImage ? files.mainImage[0].filename : null;
@@ -189,7 +171,7 @@ class productController {
         return;
       }
 
-      const product = new ProductDTO(null, title, description, price, amount, mainImage, additionalImages);
+      const product = new ProductDTO(null, title, manufacturer, description, price, amount, mainImage, additionalImages);
 
       await productRepository.create(product);
       const postedProduct: ProductDTO | null = await productRepository.getByTitle(title);
