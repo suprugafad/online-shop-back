@@ -21,6 +21,22 @@ class orderController {
     }
   };
 
+  public getOrdersFullInfo = async (req: Request, res: Response) => {
+    try {
+      const orders = await orderRepository.getAllFullInfo();
+
+      if (!orders) {
+        return res.status(404).json({message: 'Orders not found'});
+      }
+
+      res.status(200).json(orders);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting orders.' });
+    }
+  };
+
+
   public getOrderById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -66,7 +82,7 @@ class orderController {
         return res.status(404).json({message: 'Order not found.'});
       }
 
-      const newProduct = new OrderDTO(order.id, order.products, order.userId, status || order.status, comment || order.comment,totalPrice || order.totalPrice,  addressId || order.addressId, order.createdAt);
+      const newProduct = new OrderDTO(order.id, order.products, order.userId, status.toLowerCase() || order.status, comment || order.comment,totalPrice || order.totalPrice,  addressId || order.addressId, order.createdAt);
 
       await orderRepository.update(newProduct);
 
