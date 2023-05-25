@@ -86,7 +86,7 @@ class paymentController {
   public updatePayment = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
-      const { userId, orderId, transactionId, amount, transactionDate, method, status } = req.body;
+      const { transactionId, amount, transactionDate, method, status } = req.body;
 
       const payment = await paymentRepository.getById(id);
 
@@ -94,7 +94,7 @@ class paymentController {
         return res.status(404).json({message: 'Product not found.'});
       }
 
-      const newPayment = new PaymentDTO(payment.id, userId || payment.userId, orderId || payment.orderId, transactionId || payment.transactionId, amount || payment.amount, transactionDate || payment.transactionDate, method || payment.method, status || payment.status);
+      const newPayment = new PaymentDTO(payment.id, payment.userId, payment.orderId, transactionId || payment.transactionId, amount || payment.amount, transactionDate || payment.transactionDate, method || payment.method, status || payment.status);
 
       await paymentRepository.update(newPayment);
 

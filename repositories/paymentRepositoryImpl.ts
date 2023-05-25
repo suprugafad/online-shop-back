@@ -45,12 +45,12 @@ export class PaymentRepositoryImpl implements IPaymentRepository {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const { id, userId, orderId, transactionId, amount, transactionDate, method, status } = result.rows[0];
+        const { id, user_id, order_id, transaction_id, amount, transaction_date, method, status } = result.rows[0];
 
-        return new PaymentDTO(id, userId, orderId, transactionId, amount, transactionDate, method, status);
+        return new PaymentDTO(id, user_id, order_id, transaction_id, amount, transaction_date, method, status);
       }
     } catch (err) {
-      throw new Error('Unable to get cart item by ID');
+      throw new Error('Unable to get payment by ID');
     }
     return null;
   };
