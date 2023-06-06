@@ -1,7 +1,6 @@
 import { IOrderRepository } from "./interfaces/IOrderRepository";
 import { query } from '../db';
 import OrderDTO from "../dtos/orderDTO";
-import {OrderStatus} from "../enums/orderStatusEnum";
 import ProductDTO from "../dtos/productDTO";
 
 export class OrderRepositoryImpl implements IOrderRepository {
@@ -89,6 +88,48 @@ export class OrderRepositoryImpl implements IOrderRepository {
       return result.rows.map(row => new OrderDTO(row.id, row.products, row.user_id, row.status, row.comment, row.total_price, row.address_id, row.created_at));
     } catch (err) {
       throw new Error(`Unable to get orders by ${type}`);
+    }
+  };
+
+  async filterByProductId(productId: number): Promise<OrderDTO[]> {
+    const queryText = `SELECT id, user_id, total_price, comment, status, products, address_id, created_at FROM "order" WHERE products @> '[{"id": ${productId}}]'::jsonb ORDER BY created_at ASC;`;
+
+    try {
+      const result = await query(queryText);
+
+      return result.rows.map(row => new OrderDTO(row.id, row.products, row.user_id, row.status, row.comment, row.total_price, row.address_id, row.created_at));
+    } catch (err) {
+      console.error(err);
+      throw new Error(`Unable to get orders by product id`);
+    }
+  };
+
+  async getAmountOfDelivered(): Promise<number> {
+    const queryText = `SELECT COUNT(*) FROM "order" WHERE status = 'delivered';`;
+
+    try {
+      const result = await query(queryText);
+      return parseInt(result.rows[0].count);
+    } catch (err) {
+      throw new Error('Unable to count all users');
+    }
+  };
+
+  async getMonthlySales(): Promise<{ month: number, total_sales: number }[]> {
+    const queryText = `
+    SELECT EXTRACT(MONTH FROM created_at) AS month, SUM(total_price) as total_sales
+    FROM "order"
+    WHERE status='delivered'
+    GROUP BY month
+    ORDER BY month ASC;
+  `;
+
+    try {
+      const result = await query(queryText);
+
+      return result.rows;
+    } catch (err) {
+      throw new Error('Unable to get monthly sales');
     }
   };
 
