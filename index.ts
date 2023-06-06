@@ -11,6 +11,8 @@ import productCategoryRouter from "./routers/productCategoryRouter";
 import config from "./config/config";
 import cartRouter from "./routers/cartRouter";
 import orderRouter from "./routers/orderRouter";
+import reviewRouter from "./routers/reviewRouter";
+import favoriteItemRouter from "./routers/favoriteItemRouter";
 
 const path = require("path");
 const cors = require("cors");
@@ -39,11 +41,13 @@ app.use("/api/usersAddresses", userAddressRouter);
 app.use("/api/auth", authRouter);
 app.use("/api/carts", cartRouter);
 app.use("/api/cartItems", cartItemRouter);
+app.use("/api/favoriteItems", favoriteItemRouter);
 app.use("/api/categories", categoryRouter);
 app.use("/api/payments", paymentRouter);
 app.use("/api/products", productRouter);
 app.use("/api/productCategories", productCategoryRouter);
 app.use("/api/orders", orderRouter);
+app.use("/api/reviews", reviewRouter);
 
 const start = async (): Promise<void> => {
     try {
