@@ -80,6 +80,17 @@ export class UserRepositoryImpl implements IUserRepository {
     }
   };
 
+  async countAllCustomers(): Promise<number> {
+    const queryText = `SELECT COUNT(*) FROM "user" WHERE role = 'customer';`;
+
+    try {
+      const result = await query(queryText);
+      return parseInt(result.rows[0].count);
+    } catch (err) {
+      throw new Error('Unable to count all users');
+    }
+  };
+
   async update(user: UserDTO): Promise<void> {
     const queryText = 'UPDATE "user" SET username = $1, email = $2, role = $3 WHERE id = $4';
     const values = [user.username, user.email, user.role, user.id];

@@ -10,6 +10,7 @@ router.use(cors({
 }));
 
 router.get("/", userController.getUsers);
+router.get("/amountCustomers", userController.getAmountOfCustomers);
 router.get("/:id", userController.getUserById);
 router.get("/email/:email", userController.getUserByEmail);
 router.put("/:id", userController.updateUser);

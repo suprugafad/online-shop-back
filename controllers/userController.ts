@@ -54,6 +54,17 @@ class userController {
     }
   };
 
+  public getAmountOfCustomers = async (req: Request, res: Response) => {
+    try {
+      const amount = await userRepository.countAllCustomers();
+
+      res.status(200).json(amount);
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error getting user by ID.' });
+    }
+  };
+
   public updateUser = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
