@@ -95,7 +95,7 @@ export class PaymentRepositoryImpl implements IPaymentRepository {
   };
 
   async getTotalAmount(): Promise<number> {
-    const queryText = 'SELECT SUM(amount) FROM payment';
+    const queryText = `SELECT SUM(amount) FROM payment WHERE status = 'paid'`;
 
     try {
       const result = await query(queryText);
