@@ -4,13 +4,15 @@ class ReviewDTO {
   private _userId: number;
   private _rating: number;
   private _comment: string | null;
+  private _createdAt: Date | null;
 
-  constructor(id: number | null, productId: number, userId: number, rating: number, comment: string | null) {
+  constructor(id: number | null, productId: number, userId: number, rating: number, comment: string | null, createdAt: Date | null) {
     this._id = id;
     this._productId = productId;
     this._userId = userId;
     this._rating = rating;
     this._comment = comment;
+    this._createdAt = createdAt;
   }
 
   get id(): number | null {
@@ -47,6 +49,14 @@ class ReviewDTO {
 
   set comment(comment: string | null) {
     this._comment = comment;
+  }
+
+  get createdAt(): Date | null {
+    return this._createdAt;
+  }
+
+  set createdAt(createdAt: Date | null) {
+    this._createdAt = createdAt;
   }
 }
 

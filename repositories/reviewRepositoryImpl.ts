@@ -15,28 +15,28 @@ export class ReviewRepositoryImpl implements IReviewRepository {
   };
 
   async getAll(): Promise<ReviewDTO[]> {
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review ORDER BY id ASC;`;
+    const queryText = `SELECT id, product_id, user_id, rating, comment, created_at FROM review ORDER BY id ASC;`;
 
     try {
       const result = await query(queryText);
 
-      return result.rows.map(row => new ReviewDTO(row.id, row.productId, row.userId, row.rating, row.comment));
+      return result.rows.map(row => new ReviewDTO(row.id, row.product_id, row.user_id, row.rating, row.comment, row.created_at));
     } catch (err) {
       throw new Error('Unable to get all reviews');
     }
   };
 
   async getById(id: number): Promise<ReviewDTO | null> {
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE id = $1;`;
+    const queryText = `SELECT id, product_id, user_id, rating, comment, created_at FROM review WHERE id = $1;`;
     const values = [id];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, productId, userId, rating, comment} = result.rows[0];
+        const {id, product_id, user_id, rating, comment, created_at} = result.rows[0];
 
-        return new ReviewDTO(id, productId, userId, rating, comment);
+        return new ReviewDTO(id, product_id, user_id, rating, comment, created_at);
       }
     } catch (err) {
       throw new Error('Unable to get review');
@@ -45,26 +45,26 @@ export class ReviewRepositoryImpl implements IReviewRepository {
   };
 
   async filterByParameter(type: string, value: string | number): Promise<ReviewDTO[]> { // user_id, product_id
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE ${type} = $1;`;
+    const queryText = `SELECT id, product_id, user_id, rating, comment, created_at FROM review WHERE ${type} = $1;`;
     const values = [value];
 
     try {
       const result = await query(queryText, values);
 
-      return result.rows.map(row => new ReviewDTO(row.id, row.productId, row.userId, row.rating, row.comment));
+      return result.rows.map(row => new ReviewDTO(row.id, row.product_id, row.user_id, row.rating, row.comment, row.created_at));
     } catch (err) {
       throw new Error(`Unable to get review by ${type}`);
     }
   };
 
   async getByProductIdAndRating(productId: number, rating: number): Promise<ReviewDTO[]> {
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE product_id = $1 AND rating = $2;`;
+    const queryText = `SELECT id, product_id, user_id, rating, comment, created_at FROM review WHERE product_id = $1 AND rating = $2;`;
     const values = [productId, rating];
 
     try {
       const result = await query(queryText, values);
 
-      return result.rows.map(row => new ReviewDTO(row.id, row.productId, row.userId, row.rating, row.comment));
+      return result.rows.map(row => new ReviewDTO(row.id, row.product_id, row.user_id, row.rating, row.comment, row.created_at));
     } catch (err) {
       throw new Error('Unable to get review');
     }
@@ -117,16 +117,16 @@ export class ReviewRepositoryImpl implements IReviewRepository {
   };
 
   async getByUserIdAndProductId(userId: number, productId: number): Promise<ReviewDTO | null> {
-    const queryText = `SELECT id, product_id, user_id, rating, comment FROM review WHERE product_id = $1 AND user_id = $2;`;
+    const queryText = `SELECT id, product_id, user_id, rating, comment, created_at FROM review WHERE product_id = $1 AND user_id = $2;`;
     const values = [productId, userId];
 
     try {
       const result = await query(queryText, values);
 
       if (result.rows.length > 0) {
-        const {id, productId, userId, rating, comment} = result.rows[0];
+        const {id, product_id, user_id, rating, comment, created_at} = result.rows[0];
 
-        return new ReviewDTO(id, productId, userId, rating, comment);
+        return new ReviewDTO(id, product_id, user_id, rating, comment, created_at);
       }
     } catch (err) {
       throw new Error('Unable to get review by user ID and product ID');

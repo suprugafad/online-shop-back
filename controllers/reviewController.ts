@@ -59,10 +59,10 @@ class reviewController {
       const productId = parseInt(req.params.productId);
       const userId = parseInt(req.params.userId);
 
-      const reviews = await reviewRepository.getByUserIdAndProductId(productId, userId);
+      const reviews = await reviewRepository.getByUserIdAndProductId(userId, productId);
 
       if (!reviews) {
-        return res.status(404).json({message: 'Reviews not found by product ID and user ID'});
+        return res.status(204).json({message: 'Reviews not found by product ID and user ID'});
       }
 
       res.status(200).json(reviews);
@@ -101,7 +101,7 @@ class reviewController {
         return res.status(404).json({message: 'Review not found.'});
       }
 
-      const newReview = new ReviewDTO(review.id, review.productId, review.userId, rating || review.rating, comment || review.comment);
+      const newReview = new ReviewDTO(review.id, review.productId, review.userId, rating || review.rating, comment || review.comment, review.createdAt);
 
       await reviewRepository.update(newReview);
 
@@ -123,7 +123,7 @@ class reviewController {
         return;
       }
 
-      const review = new ReviewDTO(null, productId, userId, rating, comment);
+      const review = new ReviewDTO(null, productId, userId, rating, comment, null);
       await reviewRepository.create(review);
 
       res.status(201).send(`Review was added`);
