@@ -14,8 +14,10 @@ router.use(cors({
 router.get('/', productController.getProducts);
 router.get('/byFilterPaginated', productController.getProductsByFilterWithPagination);
 router.get('/paginated', productController.getPaginated);
-// router.get('/paginatedWithFilers', productController.getPaginatedWithFilters);
 router.get('/manufacturers', productController.getAllManufacturers);
+router.get('/new_products', productController.getNewProducts);
+router.get('/popular_products', productController.getPopularProducts);
+router.get('/recommendations/:userId', productController.getRecommendedProducts);
 router.get('/:id', productController.getProductById);
 router.post(
   "/",
@@ -25,5 +27,6 @@ router.post(
 router.put('/:id', productController.updateProduct);
 router.delete('/:id', productController.deleteProduct);
 router.get('/title/:title', productController.getProductByTitle);
+
 
 export default router;

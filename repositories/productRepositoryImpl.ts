@@ -52,6 +52,26 @@ export class ProductRepositoryImpl implements IRepository<ProductDTO> {
     }
   };
 
+  async getNewProducts(): Promise<ProductDTO[]> {
+    const queryText = `SELECT id, title, manufacturer, description, price, amount, main_image, additional_images FROM product ORDER BY created_at DESC LIMIT 6;`;
+
+    try {
+      const products = await query(queryText);
+      let additionalImages: string[] | null = null;
+
+      return products.rows.map(row => {
+        if (row.additional_images) {
+          additionalImages = row.additional_images.split(',');
+        }
+
+        return new ProductDTO(row.id, row.title, row.manufacturer, row.description, row.price, row.amount, row.main_image, additionalImages);
+      });
+    } catch (err) {
+      throw new Error('Unable to get new products');
+    }
+  };
+
+
   async getPaginated(page: number, limit: number, sort: string): Promise<ProductDTO[]> {
     const offset = (page - 1) * limit;
 
