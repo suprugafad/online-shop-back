@@ -65,6 +65,11 @@ class AuthController {
   public getUserIdFromToken = async (req: Request, res: Response) => {
     try {
       const token = req.cookies.token;
+
+      if (!token) {
+        return res.status(200).json({ isAuthenticated: false });
+      }
+
       const data = jwt.verify(token, secret);
       res.status(200).send({ userId: data.id });
     } catch (err) {
@@ -91,11 +96,11 @@ class AuthController {
         return res.status(200).json({ isAuthenticated: false });
       }
 
-      jwt.verify(token, secret);
+      const { role } = jwt.verify(token, secret);
 
-      return res.status(200).json({ isAuthenticated: true });
+      return res.status(200).json({ isAuthenticated: true, role });
     } catch (e) {
-      return res.status(403).json({ isAuthenticated: false });
+      return res.status(200).json({ isAuthenticated: false });
     }
   };
 
