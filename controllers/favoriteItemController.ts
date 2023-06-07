@@ -49,6 +49,26 @@ class FavoriteItemController {
     }
   };
 
+  public deleteFavoriteItemByUserIdAndProductId = async (req: Request, res: Response) => {
+    try {
+      const productId = parseInt(req.params.productId);
+      const userId = parseInt(req.params.userId);
+
+      const favoriteItem = await favoriteItemRepository.isFavoriteItem(userId, productId);
+
+      if (!favoriteItem) {
+        return res.status(404).json({message: 'Favorite item not found'});
+      }
+
+      await favoriteItemRepository.deleteByUserIdAndProductId(userId, productId);
+
+      res.status(200).send('Favorite item deleted successfully');
+    } catch (err) {
+      console.error(err);
+      res.status(500).json({ message: 'Error deleting favorite item.' });
+    }
+  };
+
   public getFavoriteItemById = async (req: Request, res: Response) => {
     try {
       const id = parseInt(req.params.id);
@@ -81,7 +101,8 @@ class FavoriteItemController {
 
   public isFavoriteItem = async (req: Request, res: Response) => {
     try {
-      const { productId, userId } = req.body;
+      const userId = parseInt(req.params.userId);
+      const productId = parseInt(req.params.productId);
 
       const isFavorite = await favoriteItemRepository.isFavoriteItem(userId, productId);
 
