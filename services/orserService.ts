@@ -13,9 +13,10 @@ type DBProduct = ProductDTO;
 type DBProducts = DBProduct[];
 
 export class OrderService {
+
   async getFavoriteCategories(userId: number): Promise<CategoryDTO[]> {
     try {
-      const orders = await orderRepository.filterByParameter('userId', userId);
+      const orders = await orderRepository.filterByParameter('user_id', userId);
 
       const productIds: number[] = [];
 
